@@ -161,10 +161,30 @@
       }
 
       .weather {
+        border: 0;
+        border-radius: 0;
+        background: transparent;
         display: inline-flex;
         align-items: center;
         justify-content: center;
         gap: 8px;
+        transition: color 160ms ease, transform 160ms ease;
+      }
+
+      .weather:hover,
+      .settings:hover {
+        border-color: transparent;
+        background: transparent;
+        box-shadow: none;
+        color: var(--leaf);
+        transform: translateY(-1px);
+      }
+
+      .weather:focus-visible,
+      .settings:focus-visible {
+        border-color: transparent;
+        background: transparent;
+        box-shadow: none;
       }
 
       .weather-wrap {
@@ -208,6 +228,13 @@
         font-weight: 700;
         letter-spacing: 0.05em;
         text-transform: uppercase;
+      }
+
+      .weather-location {
+        margin: -6px 0 12px;
+        color: #6b856d;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        font-size: 0.7rem;
       }
 
       .weather-stats {
@@ -267,14 +294,18 @@
 
       .weather-icon {
         font-family: "Apple Color Emoji", "Segoe UI Emoji", sans-serif;
-        font-size: 1.15rem;
+        font-size: 2rem;
       }
 
       .settings {
+        border: 0;
+        border-radius: 0;
+        background: transparent;
         display: inline-flex;
         align-items: center;
         justify-content: center;
         gap: 8px;
+        font-size: 2rem;
       }
 
       .settings-wrap {
@@ -927,31 +958,32 @@
           <section class="weather-panel" id="weather-panel" aria-label="Current weather statistics" hidden>
             <div class="weather-heading">
               <span>Current weather</span>
-              <span class="weather-condition">Sunny</span>
+              <span class="weather-condition" id="weather-condition">Loading</span>
             </div>
+            <p class="weather-location" id="weather-location">Finding your location...</p>
             <div class="weather-stats">
               <div class="weather-stat">
                 <span class="weather-stat-label">Temperature</span>
-                <span class="weather-stat-value">72 F</span>
+                <span class="weather-stat-value" id="weather-temperature">--</span>
               </div>
               <div class="weather-stat">
                 <span class="weather-stat-label">Humidity</span>
-                <span class="weather-stat-value">58%</span>
+                <span class="weather-stat-value" id="weather-humidity">--</span>
               </div>
               <div class="weather-stat">
                 <span class="weather-stat-label">Wind</span>
-                <span class="weather-stat-value">6 mph</span>
+                <span class="weather-stat-value" id="weather-wind">--</span>
               </div>
               <div class="weather-stat">
                 <span class="weather-stat-label">Rain chance</span>
-                <span class="weather-stat-value">10%</span>
+                <span class="weather-stat-value" id="weather-rain">--</span>
               </div>
             </div>
             <div class="forecast" aria-label="Four day forecast">
-              <span class="forecast-day"><strong>Today</strong><span>72 F</span><span>Sunny</span></span>
-              <span class="forecast-day"><strong>Tue</strong><span>70 F</span><span>Clear</span></span>
-              <span class="forecast-day"><strong>Wed</strong><span>68 F</span><span>Cloudy</span></span>
-              <span class="forecast-day"><strong>Thu</strong><span>71 F</span><span>Bright</span></span>
+              <span class="forecast-day"><strong id="forecast-day-0">Today</strong><span id="forecast-temperature-0">--</span><span id="forecast-condition-0">--</span></span>
+              <span class="forecast-day"><strong id="forecast-day-1">--</strong><span id="forecast-temperature-1">--</span><span id="forecast-condition-1">--</span></span>
+              <span class="forecast-day"><strong id="forecast-day-2">--</strong><span id="forecast-temperature-2">--</span><span id="forecast-condition-2">--</span></span>
+              <span class="forecast-day"><strong id="forecast-day-3">--</strong><span id="forecast-temperature-3">--</span><span id="forecast-condition-3">--</span></span>
             </div>
           </section>
         </div>
@@ -1009,7 +1041,7 @@
 
         <section class="status-grid" aria-label="Garden status">
           <article class="status-card"><span class="status-card-label">System health</span><strong class="status-card-value">Excellent</strong><span class="status-card-note">All devices online</span></article>
-          <article class="status-card"><span class="status-card-label">Today</span><strong class="status-card-value">72 F</strong><span class="status-card-note">Sunny and calm</span></article>
+            <article class="status-card"><span class="status-card-label">Today</span><strong class="status-card-value" id="dashboard-temperature">--</strong><span class="status-card-note" id="dashboard-weather-note">Loading weather</span></article>
           <article class="status-card"><span class="status-card-label">Soil moisture</span><strong class="status-card-value">64%</strong><span class="status-card-note">Within your target range</span></article>
           <article class="status-card"><span class="status-card-label">Motion alerts</span><strong class="status-card-value">2</strong><span class="status-card-note">Since yesterday</span></article>
         </section>
@@ -1125,6 +1157,19 @@
       const userImage = document.querySelector(".user-image");
       const productOptions = document.querySelectorAll(".product-card");
       const backToProductsButtons = document.querySelectorAll(".back-to-products");
+      const weatherCondition = document.querySelector("#weather-condition");
+      const weatherLocation = document.querySelector("#weather-location");
+      const weatherTemperature = document.querySelector("#weather-temperature");
+      const weatherHumidity = document.querySelector("#weather-humidity");
+      const weatherWind = document.querySelector("#weather-wind");
+      const weatherRain = document.querySelector("#weather-rain");
+      const dashboardTemperature = document.querySelector("#dashboard-temperature");
+      const dashboardWeatherNote = document.querySelector("#dashboard-weather-note");
+      const weatherForecast = Array.from({ length: 4 }, (_, index) => ({
+        day: document.querySelector(`#forecast-day-${index}`),
+        temperature: document.querySelector(`#forecast-temperature-${index}`),
+        condition: document.querySelector(`#forecast-condition-${index}`)
+      }));
 
       const savedDarkMode = localStorage.getItem("garden-guard-dark-mode") === "true";
       document.body.classList.toggle("dark-mode", savedDarkMode);
@@ -1137,6 +1182,93 @@
       };
 
       updateMenuOptions("main-view");
+
+      const weatherCodeLabels = {
+        0: "Clear", 1: "Mostly clear", 2: "Partly cloudy", 3: "Overcast",
+        45: "Foggy", 48: "Rime fog", 51: "Light drizzle", 53: "Drizzle", 55: "Heavy drizzle",
+        61: "Light rain", 63: "Rain", 65: "Heavy rain", 71: "Light snow", 73: "Snow", 75: "Heavy snow",
+        80: "Rain showers", 81: "Rain showers", 82: "Heavy showers", 95: "Thunderstorm", 96: "Hailstorm", 99: "Hailstorm"
+      };
+
+      const getUserCoordinates = () => {
+        const savedCoordinates = localStorage.getItem("garden-guard-location");
+        if (savedCoordinates) {
+          try {
+            const coordinates = JSON.parse(savedCoordinates);
+            if (Number.isFinite(coordinates.latitude) && Number.isFinite(coordinates.longitude)) {
+              return Promise.resolve(coordinates);
+            }
+          } catch {
+            localStorage.removeItem("garden-guard-location");
+          }
+        }
+
+        if (!navigator.geolocation) {
+          return Promise.reject(new Error("Location is not available in this browser."));
+        }
+
+        return new Promise((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(
+            ({ coords }) => {
+              const coordinates = { latitude: coords.latitude, longitude: coords.longitude };
+              localStorage.setItem("garden-guard-location", JSON.stringify(coordinates));
+              resolve(coordinates);
+            },
+            () => reject(new Error("Location permission was denied.")),
+            { enableHighAccuracy: false, timeout: 10000, maximumAge: 900000 }
+          );
+        });
+      };
+
+      const formatForecastDay = (dateString, index, timeZone) => {
+        if (index === 0) return "Today";
+        return new Intl.DateTimeFormat(undefined, { weekday: "short", timeZone }).format(new Date(`${dateString}T12:00:00`));
+      };
+
+      const loadWeather = async () => {
+        weatherCondition.textContent = "Loading";
+        weatherLocation.textContent = "Finding your location...";
+
+        try {
+          const { latitude, longitude } = await getUserCoordinates();
+          const params = new URLSearchParams({
+            latitude,
+            longitude,
+            current: "temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code",
+            hourly: "precipitation_probability",
+            daily: "temperature_2m_max,weather_code,precipitation_probability_max",
+            temperature_unit: "fahrenheit",
+            wind_speed_unit: "mph",
+            timezone: "auto",
+            forecast_days: "4"
+          });
+          const response = await fetch(`https://api.open-meteo.com/v1/forecast?${params}`);
+          if (!response.ok) throw new Error("Weather service is unavailable.");
+          const weather = await response.json();
+
+          weatherCondition.textContent = weatherCodeLabels[weather.current.weather_code] || "Current conditions";
+          weatherLocation.textContent = `Your location · Updated ${new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}`;
+          weatherTemperature.textContent = `${Math.round(weather.current.temperature_2m)} F`;
+          weatherHumidity.textContent = `${Math.round(weather.current.relative_humidity_2m)}%`;
+          weatherWind.textContent = `${Math.round(weather.current.wind_speed_10m)} mph`;
+          weatherRain.textContent = `${weather.hourly.precipitation_probability[0]}%`;
+          dashboardTemperature.textContent = `${Math.round(weather.current.temperature_2m)} F`;
+          dashboardWeatherNote.textContent = weatherCodeLabels[weather.current.weather_code] || "Current conditions";
+
+          weatherForecast.forEach((forecast, index) => {
+            forecast.day.textContent = formatForecastDay(weather.daily.time[index], index, weather.timezone);
+            forecast.temperature.textContent = `${Math.round(weather.daily.temperature_2m_max[index])} F`;
+            forecast.condition.textContent = weatherCodeLabels[weather.daily.weather_code[index]] || "Variable";
+          });
+        } catch (error) {
+          weatherCondition.textContent = "Unavailable";
+          weatherLocation.textContent = `${error.message} Open weather to try again.`;
+          dashboardTemperature.textContent = "--";
+          dashboardWeatherNote.textContent = "Weather unavailable";
+        }
+      };
+
+      loadWeather();
 
       menuTrigger.addEventListener("click", () => {
         weatherTrigger.setAttribute("aria-expanded", "false");
@@ -1184,6 +1316,7 @@
 
       weatherTrigger.addEventListener("click", (event) => {
         event.stopPropagation();
+        if (weatherCondition.textContent === "Unavailable") loadWeather();
         menuTrigger.setAttribute("aria-expanded", "false");
         menuPanel.hidden = true;
         settingsTrigger.setAttribute("aria-expanded", "false");
@@ -1210,6 +1343,10 @@
       });
 
       document.addEventListener("click", (event) => {
+        if (!event.target.closest(".menu-wrap")) {
+          menuTrigger.setAttribute("aria-expanded", "false");
+          menuPanel.hidden = true;
+        }
         if (!event.target.closest(".weather-wrap")) {
           weatherTrigger.setAttribute("aria-expanded", "false");
           weatherPanel.hidden = true;
