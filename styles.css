@@ -19,7 +19,7 @@ body {
   display: grid;
   justify-items: center;
   align-content: start;
-  padding: 64px 24px 24px;
+  padding: 28px 20px 40px;
   background:
     radial-gradient(
       circle at 12% 8%,
@@ -35,19 +35,19 @@ body {
 }
 
 .app {
-  width: min(100%, 520px);
+  width: min(100%, 720px);
   background: #ffffff;
-  border: 1px solid var(--line);
-  border-radius: 18px;
+  border: 1px solid rgba(215, 229, 212, 0.9);
+  border-radius: 26px;
   box-shadow:
     0 24px 55px rgba(32, 66, 42, 0.13),
     0 2px 6px rgba(32, 66, 42, 0.04);
-  padding: 32px 28px 28px;
+  padding: 28px 30px 32px;
 }
 
 .topbar {
   border-bottom: 1px solid #e4ede2;
-  padding-bottom: 24px;
+  padding-bottom: 18px;
   position: relative;
   text-align: center;
 }
@@ -66,8 +66,9 @@ body {
 
 h1 {
   margin: 0;
-  font-size: clamp(2rem, 7vw, 3rem);
-  font-weight: 500;
+  color: #234936;
+  font-size: clamp(1.7rem, 4vw, 2.25rem);
+  font-weight: 600;
   letter-spacing: 0.02em;
   line-height: 1.1;
 }
@@ -76,7 +77,11 @@ h1 {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
-  margin-top: 24px;
+  margin-top: 18px;
+  padding: 6px;
+  border: 1px solid #e4ede2;
+  border-radius: 14px;
+  background: #f7fbf5;
 }
 
 button,
@@ -126,6 +131,7 @@ button:focus-visible,
   gap: 6px;
   font-family: inherit;
   font-size: 0.95rem;
+  font-weight: 700;
 }
 
 .menu-chevron {
@@ -380,55 +386,84 @@ button:focus-visible,
 }
 
 body.dark-mode {
-  color: #e4eee2;
-  background: linear-gradient(145deg, #18221b 0%, #25352a 100%);
+  color: #edf1ec;
+  background: linear-gradient(145deg, #20262d 0%, #303943 100%);
 }
 
 body.dark-mode .app,
 body.dark-mode .weather-panel,
 body.dark-mode .settings-panel {
-  background: #26372b;
-  border-color: #49634c;
+  background: #2b333c;
+  border-color: #56636f;
+}
+
+body.dark-mode h1 {
+  color: #edf1ec;
+}
+
+body.dark-mode .controls {
+  border-color: #56636f;
+  background: #252d35;
 }
 
 body.dark-mode .topbar,
 body.dark-mode .profile-row,
 body.dark-mode .feed-row,
 body.dark-mode .setting-row {
-  border-color: #49634c;
+  border-color: #56636f;
 }
 
 body.dark-mode button,
 body.dark-mode .menu-trigger {
-  background: #304632;
-  border-color: #59765b;
-  color: #e4eee2;
+  background: #3a4652;
+  border-color: #667582;
+  color: #edf1ec;
+}
+
+body.dark-mode .weather,
+body.dark-mode .settings {
+  background: transparent;
+  border-color: transparent;
 }
 
 body.dark-mode .menu-panel,
 body.dark-mode .menu-option:hover,
 body.dark-mode button:hover,
 body.dark-mode .menu-trigger:hover {
-  background: #344d38;
+  background: #465361;
+}
+
+body.dark-mode .weather:hover,
+body.dark-mode .settings:hover,
+body.dark-mode .weather:focus-visible,
+body.dark-mode .settings:focus-visible {
+  background: transparent;
+  border-color: transparent;
 }
 
 body.dark-mode .weather-heading,
 body.dark-mode .settings-heading,
 body.dark-mode .setting-row,
-body.dark-mode .weather-stat-value {
-  color: #e4eee2;
+body.dark-mode .weather-stat-value,
+body.dark-mode .weather-stat-label,
+body.dark-mode .weather-location,
+body.dark-mode .forecast-day,
+body.dark-mode .setting-copy small,
+body.dark-mode .status,
+body.dark-mode .view-intro {
+  color: #c1cbd0;
 }
 
 body.dark-mode .weather-stat,
 body.dark-mode .user-image,
 body.dark-mode .live-feed {
-  background: #304632;
-  border-color: #59765b;
+  background: #3a4652;
+  border-color: #667582;
 }
 
 body.dark-mode .forecast,
 body.dark-mode .timeline {
-  border-color: #49634c;
+  border-color: #56636f;
 }
 
 body.dark-mode .forecast-day strong,
@@ -436,14 +471,18 @@ body.dark-mode .dashboard-heading,
 body.dark-mode .section-heading h2,
 body.dark-mode .status-card-value,
 body.dark-mode .device-card strong,
-body.dark-mode .timeline-item {
-  color: #e4eee2;
+body.dark-mode .timeline-item,
+body.dark-mode .weather-heading,
+body.dark-mode .settings-heading,
+body.dark-mode .weather-stat-value {
+  color: #edf1ec;
 }
 
 body.dark-mode .status-card,
 body.dark-mode .device-card {
-  background: #304632;
-  border-color: #59765b;
+  background: #3a4652;
+  border-color: #667582;
+  box-shadow: none;
 }
 
 .content-view[hidden] {
@@ -451,8 +490,8 @@ body.dark-mode .device-card {
 }
 
 .content-view {
-  margin-top: 30px;
-  padding-top: 26px;
+  margin-top: 20px;
+  padding-top: 20px;
   border-top: 1px solid #e4ede2;
 }
 
@@ -461,7 +500,7 @@ body.dark-mode .device-card {
   align-items: end;
   justify-content: space-between;
   gap: 14px;
-  margin-top: 30px;
+  margin-top: 22px;
 }
 
 .dashboard-kicker {
@@ -495,16 +534,18 @@ body.dark-mode .device-card {
 
 .status-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 10px;
   margin-top: 16px;
 }
 
 .status-card {
-  padding: 14px;
+  min-height: 112px;
+  padding: 15px;
   border: 1px solid #c9dcc8;
-  border-radius: 10px;
+  border-radius: 14px;
   background: var(--wash);
+  box-shadow: 0 5px 12px rgba(32, 66, 42, 0.04);
 }
 
 .status-card-label,
@@ -546,7 +587,7 @@ body.dark-mode .device-card {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin: 30px 0 12px;
+  margin: 34px 0 12px;
 }
 
 .section-heading h2 {
@@ -572,10 +613,11 @@ body.dark-mode .device-card {
 
 .device-card {
   min-width: 0;
-  padding: 11px;
+  padding: 14px;
   border: 1px solid #c9dcc8;
-  border-radius: 8px;
+  border-radius: 12px;
   background: #f7fbf5;
+  box-shadow: 0 5px 12px rgba(32, 66, 42, 0.04);
 }
 
 .device-icon {
@@ -818,32 +860,32 @@ body.dark-mode .device-card {
 
 body.dark-mode .content-view,
 body.dark-mode .view-list-item {
-  border-color: #49634c;
+  border-color: #56636f;
 }
 
 body.dark-mode .view-heading,
 body.dark-mode .view-list-item {
-  color: #e4eee2;
+  color: #edf1ec;
 }
 
 body.dark-mode .view-list-item {
-  background: #304632;
+  background: #3a4652;
 }
 
 body.dark-mode .product-card,
 body.dark-mode .form-field input,
 body.dark-mode .form-field select {
-  background: #304632;
-  border-color: #59765b;
-  color: #e4eee2;
+  background: #3a4652;
+  border-color: #667582;
+  color: #edf1ec;
 }
 
 body.dark-mode .profile-name {
-  color: #e4eee2;
+  color: #edf1ec;
 }
 
 body.dark-mode .friend-avatar {
-  background: #3b5740;
+  background: #465c5a;
 }
 
 .profile-row {
@@ -1002,6 +1044,10 @@ body.dark-mode .friend-avatar {
 
   .device-grid {
     grid-template-columns: 1fr;
+  }
+
+  .status-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .dashboard-intro {
