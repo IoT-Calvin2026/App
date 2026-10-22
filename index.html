@@ -2,947 +2,14 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0", align="center" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+      ,
+      align="center"
+    />
     <title>Garden Guard</title>
-    <style>
-      :root {
-        color-scheme: light;
-        font-family: Georgia, "Times New Roman", serif;
-        color: #18352a;
-        background: #edf4ec;
-        --leaf: #5e8f5b;
-        --leaf-dark: #234936;
-        --line: #d7e5d4;
-        --wash: #f3f8f1;
-      }
-
-      * {
-        box-sizing: border-box;
-      }
-
-      body {
-        margin: 0;
-        min-height: 100vh;
-        display: grid;
-        justify-items: center;
-        align-content: start;
-        padding: 64px 24px 24px;
-        background:
-          radial-gradient(circle at 12% 8%, rgba(220, 238, 215, 0.95), transparent 30%),
-          radial-gradient(circle at 90% 88%, rgba(199, 224, 194, 0.65), transparent 34%),
-          linear-gradient(145deg, #fbfcf8 0%, #e5f0e3 100%);
-      }
-
-      .app {
-        width: min(100%, 520px);
-        background: #ffffff;
-        border: 1px solid var(--line);
-        border-radius: 18px;
-        box-shadow: 0 24px 55px rgba(32, 66, 42, 0.13), 0 2px 6px rgba(32, 66, 42, 0.04);
-        padding: 32px 28px 28px;
-      }
-
-      .topbar {
-        border-bottom: 1px solid #e4ede2;
-        padding-bottom: 24px;
-        position: relative;
-        text-align: center;
-      }
-
-      .topbar::after {
-        position: absolute;
-        bottom: -2px;
-        left: 50%;
-        width: 54px;
-        height: 3px;
-        border-radius: 999px;
-        background: var(--leaf);
-        content: "";
-        transform: translateX(-50%);
-      }
-
-      h1 {
-        margin: 0;
-        font-size: clamp(2rem, 7vw, 3rem);
-        font-weight: 500;
-        letter-spacing: 0.02em;
-        line-height: 1.1;
-      }
-
-      .controls {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 10px;
-        margin-top: 24px;
-      }
-
-      button,
-      .menu-trigger {
-        min-height: 48px;
-        min-width: 0;
-        padding: 0 8px;
-        border: 1px solid #c9dcc8;
-        border-radius: 8px;
-        background: #f7fbf5;
-        color: #234936;
-        font: inherit;
-        font-size: 0.95rem;
-        cursor: pointer;
-        transition: border-color 160ms ease, background 160ms ease, box-shadow 160ms ease, transform 160ms ease;
-      }
-
-      button:hover,
-      .menu-trigger:hover {
-        border-color: #79a477;
-        background: #eef7eb;
-        box-shadow: 0 5px 12px rgba(58, 103, 62, 0.1);
-        transform: translateY(-1px);
-      }
-
-      button:focus-visible,
-      .menu-trigger:focus-visible,
-      .menu-option:focus-visible {
-        outline: 3px solid rgba(94, 143, 91, 0.3);
-        outline-offset: 2px;
-      }
-
-      .menu-wrap {
-        position: relative;
-        min-width: 0;
-      }
-
-      .menu-trigger {
-        width: 100%;
-        display: inline-flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 6px;
-        font-family: inherit;
-        font-size: 0.95rem;
-      }
-
-      .menu-chevron {
-        font-size: 0.85rem;
-      }
-
-      .menu-panel {
-        position: absolute;
-        z-index: 2;
-        top: calc(100% + 6px);
-        left: 0;
-        right: 0;
-        display: grid;
-        gap: 4px;
-        padding: 6px;
-        border: 1px solid #c9dcc8;
-        border-radius: 8px;
-        background: #ffffff;
-        box-shadow: 0 16px 30px rgba(32, 66, 42, 0.16);
-      }
-
-      .menu-panel[hidden] {
-        display: none;
-      }
-
-      .menu-option {
-        min-height: 34px;
-        padding: 0 8px;
-        border: 0;
-        border-radius: 5px;
-        background: transparent;
-        color: #234936;
-        font: inherit;
-        font-size: 0.88rem;
-        text-align: left;
-      }
-
-      .menu-option:hover {
-        background: #eef7eb;
-      }
-
-      .weather {
-        border: 0;
-        border-radius: 0;
-        background: transparent;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        transition: color 160ms ease, transform 160ms ease;
-      }
-
-      .weather:hover,
-      .settings:hover {
-        border-color: transparent;
-        background: transparent;
-        box-shadow: none;
-        color: var(--leaf);
-        transform: translateY(-1px);
-      }
-
-      .weather:focus-visible,
-      .settings:focus-visible {
-        border-color: transparent;
-        background: transparent;
-        box-shadow: none;
-      }
-
-      .weather-wrap {
-        position: relative;
-        min-width: 0;
-      }
-
-      .weather-panel {
-        position: absolute;
-        z-index: 3;
-        top: calc(100% + 6px);
-        left: 0;
-        width: 300px;
-        max-width: calc(100vw - 48px);
-        padding: 16px;
-        border: 1px solid #c9dcc8;
-        border-radius: 8px;
-        background: #ffffff;
-        box-shadow: 0 10px 22px rgba(32, 66, 42, 0.12);
-      }
-
-      .weather-panel[hidden] {
-        display: none;
-      }
-
-      .weather-heading {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin: 0 0 12px;
-        color: #234936;
-        font-size: 1rem;
-        font-weight: 700;
-      }
-
-      .weather-condition {
-        margin: 0;
-        color: #5e8f5b;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        font-size: 0.75rem;
-        font-weight: 700;
-        letter-spacing: 0.05em;
-        text-transform: uppercase;
-      }
-
-      .weather-location {
-        margin: -6px 0 12px;
-        color: #6b856d;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        font-size: 0.7rem;
-      }
-
-      .weather-stats {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 8px;
-      }
-
-      .weather-stat {
-        padding: 9px;
-        border-radius: 6px;
-        background: var(--wash);
-      }
-
-      .weather-stat-label,
-      .weather-stat-value {
-        display: block;
-        margin: 0;
-      }
-
-      .weather-stat-label {
-        color: #6b856d;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        font-size: 0.7rem;
-      }
-
-      .weather-stat-value {
-        margin-top: 3px;
-        color: #234936;
-        font-size: 1rem;
-        font-weight: 700;
-      }
-
-      .forecast {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 6px;
-        margin-top: 12px;
-        padding-top: 12px;
-        border-top: 1px solid #e4ede2;
-      }
-
-      .forecast-day {
-        display: grid;
-        gap: 3px;
-        color: #6b856d;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        font-size: 0.68rem;
-        text-align: center;
-      }
-
-      .forecast-day strong {
-        color: #234936;
-        font-family: Georgia, "Times New Roman", serif;
-        font-size: 0.82rem;
-      }
-
-      .weather-icon {
-        font-family: "Apple Color Emoji", "Segoe UI Emoji", sans-serif;
-        font-size: 2rem;
-      }
-
-      .settings {
-        border: 0;
-        border-radius: 0;
-        background: transparent;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        font-size: 2rem;
-      }
-
-      .settings-wrap {
-        position: relative;
-        min-width: 0;
-        display: flex;
-        justify-content: flex-end;
-      }
-
-      .settings-panel {
-        position: absolute;
-        z-index: 3;
-        top: calc(100% + 6px);
-        right: 0;
-        width: 300px;
-        max-width: calc(100vw - 48px);
-        padding: 16px;
-        border: 1px solid #c9dcc8;
-        border-radius: 8px;
-        background: #ffffff;
-        box-shadow: 0 10px 22px rgba(32, 66, 42, 0.12);
-      }
-
-      .settings-panel[hidden] {
-        display: none;
-      }
-
-      .settings-heading {
-        margin: 0 0 12px;
-        color: #234936;
-        font-size: 1rem;
-        font-weight: 700;
-      }
-
-      .setting-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 14px;
-        min-height: 50px;
-        padding: 8px 0;
-        border-top: 1px solid #e4ede2;
-        color: #234936;
-        cursor: pointer;
-      }
-
-      .setting-copy {
-        display: grid;
-        gap: 2px;
-      }
-
-      .setting-copy small {
-        color: #6b856d;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        font-size: 0.7rem;
-      }
-
-      .setting-row input {
-        width: 18px;
-        height: 18px;
-        accent-color: #5e8f5b;
-        cursor: pointer;
-      }
-
-      body.dark-mode {
-        color: #e4eee2;
-        background: linear-gradient(145deg, #18221b 0%, #25352a 100%);
-      }
-
-      body.dark-mode .app,
-      body.dark-mode .weather-panel,
-      body.dark-mode .settings-panel {
-        background: #26372b;
-        border-color: #49634c;
-      }
-
-      body.dark-mode .topbar,
-      body.dark-mode .profile-row,
-      body.dark-mode .feed-row,
-      body.dark-mode .setting-row {
-        border-color: #49634c;
-      }
-
-      body.dark-mode button,
-      body.dark-mode .menu-trigger {
-        background: #304632;
-        border-color: #59765b;
-        color: #e4eee2;
-      }
-
-      body.dark-mode .menu-panel,
-      body.dark-mode .menu-option:hover,
-      body.dark-mode button:hover,
-      body.dark-mode .menu-trigger:hover {
-        background: #344d38;
-      }
-
-      body.dark-mode .weather-heading,
-      body.dark-mode .settings-heading,
-      body.dark-mode .setting-row,
-      body.dark-mode .weather-stat-value {
-        color: #e4eee2;
-      }
-
-      body.dark-mode .weather-stat,
-      body.dark-mode .user-image,
-      body.dark-mode .live-feed {
-        background: #304632;
-        border-color: #59765b;
-      }
-
-      body.dark-mode .forecast,
-      body.dark-mode .timeline {
-        border-color: #49634c;
-      }
-
-      body.dark-mode .forecast-day strong,
-      body.dark-mode .dashboard-heading,
-      body.dark-mode .section-heading h2,
-      body.dark-mode .status-card-value,
-      body.dark-mode .device-card strong,
-      body.dark-mode .timeline-item {
-        color: #e4eee2;
-      }
-
-      body.dark-mode .status-card,
-      body.dark-mode .device-card {
-        background: #304632;
-        border-color: #59765b;
-      }
-
-      .content-view[hidden] {
-        display: none;
-      }
-
-      .content-view {
-        margin-top: 30px;
-        padding-top: 26px;
-        border-top: 1px solid #e4ede2;
-      }
-
-      .dashboard-intro {
-        display: flex;
-        align-items: end;
-        justify-content: space-between;
-        gap: 14px;
-        margin-top: 30px;
-      }
-
-      .dashboard-kicker {
-        margin: 0 0 5px;
-        color: #6b856d;
-        font: 700 0.72rem -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-      }
-
-      .dashboard-heading {
-        margin: 0;
-        color: #234936;
-        font-size: 1.45rem;
-      }
-
-      .last-updated {
-        margin: 0;
-        color: #6b856d;
-        font: 0.72rem -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        text-align: right;
-      }
-
-      .status-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
-        margin-top: 16px;
-      }
-
-      .status-card {
-        padding: 14px;
-        border: 1px solid #c9dcc8;
-        border-radius: 10px;
-        background: var(--wash);
-      }
-
-      .status-card-label,
-      .status-card-value,
-      .status-card-note {
-        display: block;
-        margin: 0;
-      }
-
-      .status-card-label {
-        color: #6b856d;
-        font: 0.7rem -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        text-transform: uppercase;
-      }
-
-      .status-card-value {
-        margin-top: 6px;
-        color: #234936;
-        font-size: 1.3rem;
-        font-weight: 700;
-      }
-
-      .status-card-note {
-        margin-top: 3px;
-        color: #5e8f5b;
-        font: 0.73rem -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      }
-
-      .section-heading {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-        margin: 30px 0 12px;
-      }
-
-      .section-heading h2 {
-        margin: 0;
-        color: #234936;
-        font-size: 1.15rem;
-      }
-
-      .section-heading span {
-        color: #6b856d;
-        font: 0.72rem -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      }
-
-      .device-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 8px;
-      }
-
-      .device-card {
-        min-width: 0;
-        padding: 11px;
-        border: 1px solid #c9dcc8;
-        border-radius: 8px;
-        background: #f7fbf5;
-      }
-
-      .device-icon {
-        font-size: 1.2rem;
-      }
-
-      .device-card strong,
-      .device-card small {
-        display: block;
-      }
-
-      .device-card strong {
-        margin-top: 7px;
-        color: #234936;
-        font-size: 0.82rem;
-      }
-
-      .device-card small {
-        margin-top: 3px;
-        color: #5e8f5b;
-        font: 0.68rem -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      }
-
-      .timeline {
-        display: grid;
-        gap: 10px;
-        margin: 0;
-        padding: 0 0 0 18px;
-        border-left: 2px solid #d7e5d4;
-        list-style: none;
-      }
-
-      .timeline-item {
-        position: relative;
-        color: #234936;
-        font-size: 0.85rem;
-      }
-
-      .timeline-item::before {
-        position: absolute;
-        top: 4px;
-        left: -25px;
-        width: 10px;
-        height: 10px;
-        border: 2px solid #ffffff;
-        border-radius: 50%;
-        background: var(--leaf);
-        box-shadow: 0 0 0 1px var(--leaf);
-        content: "";
-      }
-
-      .timeline-item small {
-        display: block;
-        margin-top: 2px;
-        color: #6b856d;
-        font: 0.7rem -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      }
-
-      .view-heading {
-        margin: 0;
-        color: #234936;
-        font-size: 1.4rem;
-      }
-
-      .view-intro {
-        margin: 10px 0 18px;
-        color: #6b856d;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        font-size: 0.9rem;
-      }
-
-      .view-list {
-        display: grid;
-        gap: 10px;
-        margin: 0;
-        padding: 0;
-        list-style: none;
-      }
-
-      .view-list-item {
-        padding: 14px;
-        border: 1px solid #c9dcc8;
-        border-radius: 8px;
-        background: #f7fbf5;
-        color: #234936;
-      }
-
-      .view-list-item strong,
-      .view-list-item small {
-        display: block;
-      }
-
-      .view-list-item small {
-        margin-top: 4px;
-        color: #6b856d;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        font-size: 0.78rem;
-      }
-
-      .product-card {
-        width: 100%;
-        padding: 14px;
-        border: 1px solid #c9dcc8;
-        border-radius: 8px;
-        background: #f7fbf5;
-        color: #234936;
-        font: inherit;
-        text-align: left;
-        cursor: pointer;
-        transition: border-color 160ms ease, background 160ms ease, box-shadow 160ms ease, transform 160ms ease;
-      }
-
-      .product-card:hover {
-        border-color: #79a477;
-        background: #eef7eb;
-        box-shadow: 0 8px 16px rgba(58, 103, 62, 0.1);
-        transform: translateY(-1px);
-      }
-
-      .product-card strong,
-      .product-card small {
-        display: block;
-      }
-
-      .product-card small {
-        margin-top: 4px;
-        color: #6b856d;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        font-size: 0.78rem;
-      }
-
-      .setup-form {
-        display: grid;
-        gap: 14px;
-      }
-
-      .form-field {
-        display: grid;
-        gap: 6px;
-        color: #234936;
-        font-weight: 700;
-      }
-
-      .form-field input,
-      .form-field select {
-        width: 100%;
-        min-height: 42px;
-        padding: 0 10px;
-        border: 1px solid #c9dcc8;
-        border-radius: 6px;
-        background: #f7fbf5;
-        color: #234936;
-        font: 0.88rem -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      }
-
-      .form-field small {
-        color: #6b856d;
-        font: 0.76rem -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        font-weight: 400;
-      }
-
-      .form-actions {
-        display: flex;
-        justify-content: space-between;
-        gap: 10px;
-        margin-top: 4px;
-      }
-
-      .form-action {
-        min-height: 42px;
-        padding: 0 14px;
-      }
-
-      .view-setting {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 14px;
-      }
-
-      .view-setting input {
-        width: 18px;
-        height: 18px;
-        accent-color: #5e8f5b;
-      }
-
-      .view-setting .view-text {
-        width: 150px;
-        height: 34px;
-        padding: 0 9px;
-        border: 1px solid #c9dcc8;
-        border-radius: 6px;
-        color: #234936;
-        font: 0.85rem -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      }
-
-      .friend-item {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-      }
-
-      .friend-avatar {
-        width: 38px;
-        height: 38px;
-        display: grid;
-        flex: 0 0 auto;
-        place-items: center;
-        border-radius: 50%;
-        background: #eaf4e8;
-        color: #5e8f5b;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        font-size: 0.75rem;
-        font-weight: 700;
-      }
-
-      body.dark-mode .content-view,
-      body.dark-mode .view-list-item {
-        border-color: #49634c;
-      }
-
-      body.dark-mode .view-heading,
-      body.dark-mode .view-list-item {
-        color: #e4eee2;
-      }
-
-      body.dark-mode .view-list-item {
-        background: #304632;
-      }
-
-      body.dark-mode .product-card,
-      body.dark-mode .form-field input,
-      body.dark-mode .form-field select {
-        background: #304632;
-        border-color: #59765b;
-        color: #e4eee2;
-      }
-
-      body.dark-mode .profile-name {
-        color: #e4eee2;
-      }
-
-      body.dark-mode .friend-avatar {
-        background: #3b5740;
-      }
-
-      .profile-row {
-        display: flex;
-        align-items: center;
-        flex-direction: column;
-        justify-content: center;
-        margin-top: 32px;
-        padding-top: 28px;
-        border-top: 1px solid #e4ede2;
-      }
-
-      .user-image {
-        width: 156px;
-        height: 156px;
-        display: grid;
-        place-items: center;
-        border: 1px solid #c9dcc8;
-        border-radius: 50%;
-        background: radial-gradient(circle at 35% 28%, #f8fcf5 0%, #dcebd8 100%);
-        color: var(--leaf);
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        font-size: 0.85rem;
-        font-weight: 700;
-        letter-spacing: 0.06em;
-        text-align: center;
-        text-transform: uppercase;
-        box-shadow: inset 0 0 0 7px rgba(255, 255, 255, 0.45), 0 10px 20px rgba(58, 103, 62, 0.12);
-        transition: transform 160ms ease, box-shadow 160ms ease;
-      }
-
-      .user-image:hover {
-        box-shadow: inset 0 0 0 7px rgba(255, 255, 255, 0.6), 0 14px 25px rgba(58, 103, 62, 0.18);
-        transform: translateY(-2px);
-      }
-
-      .profile-name {
-        margin: 10px 0 0;
-        color: #234936;
-        font-size: 1rem;
-        font-weight: 700;
-        text-align: center;
-      }
-
-      .profile-name small {
-        display: block;
-        margin-top: 3px;
-        color: #6b856d;
-        font: 0.72rem -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        font-weight: 400;
-      }
-
-      .feed-row {
-        margin-top: 32px;
-        padding-top: 28px;
-        border-top: 1px solid #e4ede2;
-      }
-
-      .live-feed {
-        width: 100%;
-        aspect-ratio: 16 / 9;
-        display: grid;
-        place-items: center;
-        border: 1px solid #c9dcc8;
-        border-radius: 8px;
-        background: linear-gradient(135deg, #edf7eb 0%, #dcebd8 100%);
-        color: #5e8f5b;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        font-size: 0.85rem;
-        font-weight: 700;
-        letter-spacing: 0.06em;
-        text-decoration: none;
-        text-transform: uppercase;
-        cursor: pointer;
-        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.55);
-        transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
-      }
-
-      .live-feed:hover {
-        border-color: #79a477;
-        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.8), 0 8px 18px rgba(58, 103, 62, 0.12);
-        transform: translateY(-1px);
-      }
-
-      .feed-actions {
-        display: flex;
-        justify-content: space-between;
-        gap: 12px;
-        margin-top: 14px;
-      }
-
-      .feed-action {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 40px;
-        padding: 0 12px;
-        border: 1px solid #c9dcc8;
-        border-radius: 8px;
-        background: #f7fbf5;
-        color: #234936;
-        font: inherit;
-        font-size: 0.85rem;
-        text-decoration: none;
-        transition: border-color 160ms ease, background 160ms ease, transform 160ms ease;
-      }
-
-      .feed-action:hover {
-        border-color: #79a477;
-        background: #eef7eb;
-        transform: translateY(-1px);
-      }
-
-      @media (max-width: 420px) {
-        .app {
-          padding: 24px 18px 20px;
-        }
-
-        .user-image {
-          width: 136px;
-          height: 136px;
-        }
-
-        .feed-action {
-          flex: 1;
-          padding: 0 8px;
-          font-size: 0.76rem;
-        }
-
-        .controls {
-          grid-template-columns: 1fr 1fr;
-        }
-
-        .menu-wrap {
-          grid-column: 1 / -1;
-          grid-row: 1;
-        }
-
-        .device-grid {
-          grid-template-columns: 1fr;
-        }
-
-        .dashboard-intro {
-          align-items: flex-start;
-          flex-direction: column;
-        }
-
-        .last-updated {
-          text-align: left;
-        }
-      }
-    </style>
+    <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <main class="app">
@@ -952,19 +19,36 @@
 
       <nav class="controls" aria-label="Garden controls">
         <div class="weather-wrap">
-          <button class="weather" type="button" aria-label="Weather" aria-expanded="false" aria-controls="weather-panel">
+          <button
+            class="weather"
+            type="button"
+            aria-label="Weather"
+            aria-expanded="false"
+            aria-controls="weather-panel"
+          >
             <span class="weather-icon" aria-hidden="true">☀</span>
           </button>
-          <section class="weather-panel" id="weather-panel" aria-label="Current weather statistics" hidden>
+          <section
+            class="weather-panel"
+            id="weather-panel"
+            aria-label="Current weather statistics"
+            hidden
+          >
             <div class="weather-heading">
               <span>Current weather</span>
-              <span class="weather-condition" id="weather-condition">Loading</span>
+              <span class="weather-condition" id="weather-condition"
+                >Loading</span
+              >
             </div>
-            <p class="weather-location" id="weather-location">Finding your location...</p>
+            <p class="weather-location" id="weather-location">
+              Finding your location...
+            </p>
             <div class="weather-stats">
               <div class="weather-stat">
                 <span class="weather-stat-label">Temperature</span>
-                <span class="weather-stat-value" id="weather-temperature">--</span>
+                <span class="weather-stat-value" id="weather-temperature"
+                  >--</span
+                >
               </div>
               <div class="weather-stat">
                 <span class="weather-stat-label">Humidity</span>
@@ -980,30 +64,78 @@
               </div>
             </div>
             <div class="forecast" aria-label="Four day forecast">
-              <span class="forecast-day"><strong id="forecast-day-0">Today</strong><span id="forecast-temperature-0">--</span><span id="forecast-condition-0">--</span></span>
-              <span class="forecast-day"><strong id="forecast-day-1">--</strong><span id="forecast-temperature-1">--</span><span id="forecast-condition-1">--</span></span>
-              <span class="forecast-day"><strong id="forecast-day-2">--</strong><span id="forecast-temperature-2">--</span><span id="forecast-condition-2">--</span></span>
-              <span class="forecast-day"><strong id="forecast-day-3">--</strong><span id="forecast-temperature-3">--</span><span id="forecast-condition-3">--</span></span>
+              <span class="forecast-day"
+                ><strong id="forecast-day-0">Today</strong
+                ><span id="forecast-temperature-0">--</span
+                ><span id="forecast-condition-0">--</span></span
+              >
+              <span class="forecast-day"
+                ><strong id="forecast-day-1">--</strong
+                ><span id="forecast-temperature-1">--</span
+                ><span id="forecast-condition-1">--</span></span
+              >
+              <span class="forecast-day"
+                ><strong id="forecast-day-2">--</strong
+                ><span id="forecast-temperature-2">--</span
+                ><span id="forecast-condition-2">--</span></span
+              >
+              <span class="forecast-day"
+                ><strong id="forecast-day-3">--</strong
+                ><span id="forecast-temperature-3">--</span
+                ><span id="forecast-condition-3">--</span></span
+              >
             </div>
           </section>
         </div>
         <div class="menu-wrap">
-          <button class="menu-trigger" type="button" aria-expanded="false" aria-controls="garden-menu">
+          <button
+            class="menu-trigger"
+            type="button"
+            aria-expanded="false"
+            aria-controls="garden-menu"
+          >
             <span class="menu-label">Home</span>
             <span class="menu-chevron" aria-hidden="true">⌄</span>
           </button>
           <div class="menu-panel" id="garden-menu" hidden>
-            <button class="menu-option" type="button" data-view="main-view">Home</button>
-            <button class="menu-option" type="button" data-view="add-products-view">Add Products</button>
-            <button class="menu-option" type="button" data-view="user-settings-view">User Settings</button>
-            <button class="menu-option" type="button" data-view="friends-view">Friends</button>
+            <button class="menu-option" type="button" data-view="main-view">
+              Home
+            </button>
+            <button
+              class="menu-option"
+              type="button"
+              data-view="add-products-view"
+            >
+              Add Products
+            </button>
+            <button
+              class="menu-option"
+              type="button"
+              data-view="user-settings-view"
+            >
+              User Settings
+            </button>
+            <button class="menu-option" type="button" data-view="friends-view">
+              Friends
+            </button>
           </div>
         </div>
         <div class="settings-wrap">
-          <button class="settings" type="button" aria-label="Settings" aria-expanded="false" aria-controls="settings-panel">
+          <button
+            class="settings"
+            type="button"
+            aria-label="Settings"
+            aria-expanded="false"
+            aria-controls="settings-panel"
+          >
             <span aria-hidden="true">⚙</span>
           </button>
-          <section class="settings-panel" id="settings-panel" aria-label="User settings" hidden>
+          <section
+            class="settings-panel"
+            id="settings-panel"
+            aria-label="User settings"
+            hidden
+          >
             <h2 class="settings-heading">User settings</h2>
             <label class="setting-row">
               <span class="setting-copy">
@@ -1040,322 +172,340 @@
         </section>
 
         <section class="status-grid" aria-label="Garden status">
-          <article class="status-card"><span class="status-card-label">System health</span><strong class="status-card-value">Excellent</strong><span class="status-card-note">All devices online</span></article>
-            <article class="status-card"><span class="status-card-label">Today</span><strong class="status-card-value" id="dashboard-temperature">--</strong><span class="status-card-note" id="dashboard-weather-note">Loading weather</span></article>
-          <article class="status-card"><span class="status-card-label">Soil moisture</span><strong class="status-card-value">64%</strong><span class="status-card-note">Within your target range</span></article>
-          <article class="status-card"><span class="status-card-label">Motion alerts</span><strong class="status-card-value">2</strong><span class="status-card-note">Since yesterday</span></article>
+          <article class="status-card">
+            <span class="status-card-label">System health</span
+            ><strong class="status-card-value">Excellent</strong
+            ><span class="status-card-note">All devices online</span>
+          </article>
+          <article class="status-card">
+            <span class="status-card-label">Today</span
+            ><strong class="status-card-value" id="dashboard-temperature"
+              >--</strong
+            ><span class="status-card-note" id="dashboard-weather-note"
+              >Loading weather</span
+            >
+          </article>
+          <article class="status-card">
+            <span class="status-card-label">Soil moisture</span
+            ><strong class="status-card-value">64%</strong
+            ><span class="status-card-note">Within your target range</span>
+          </article>
+          <article class="status-card">
+            <span class="status-card-label">Motion alerts</span
+            ><strong class="status-card-value">2</strong
+            ><span class="status-card-note">Since yesterday</span>
+          </article>
         </section>
 
         <section class="profile-row" aria-label="User image placeholder">
-          <button class="user-image" type="button" aria-label="Open user settings">GK</button>
+          <button
+            class="user-image"
+            type="button"
+            aria-label="Open user settings"
+          >
+            GK
+          </button>
           <p class="profile-name">Garden Keeper<small>Garden owner</small></p>
         </section>
 
         <section aria-labelledby="devices-heading">
-          <div class="section-heading"><h2 id="devices-heading">Connected products</h2><span>3 online</span></div>
+          <div class="section-heading">
+            <h2 id="devices-heading">Connected products</h2>
+            <span>3 online</span>
+          </div>
           <div class="device-grid">
-            <article class="device-card"><span class="device-icon" aria-hidden="true">◉</span><strong>Garden camera</strong><small>Online · Live</small></article>
-            <article class="device-card"><span class="device-icon" aria-hidden="true">◌</span><strong>Soil sensor</strong><small>64% moisture</small></article>
-            <article class="device-card"><span class="device-icon" aria-hidden="true">⌁</span><strong>Motion detector</strong><small>2 recent alerts</small></article>
+            <article class="device-card">
+              <span class="device-icon" aria-hidden="true">◉</span
+              ><strong>Garden camera</strong><small>Online · Live</small>
+            </article>
+            <article class="device-card">
+              <span class="device-icon" aria-hidden="true">◌</span
+              ><strong>Soil sensor</strong><small>64% moisture</small>
+            </article>
+            <article class="device-card">
+              <span class="device-icon" aria-hidden="true">⌁</span
+              ><strong>Motion detector</strong><small>2 recent alerts</small>
+            </article>
           </div>
         </section>
 
         <section aria-labelledby="activity-heading">
-          <div class="section-heading"><h2 id="activity-heading">Recent activity</h2><span>Today</span></div>
+          <div class="section-heading">
+            <h2 id="activity-heading">Recent activity</h2>
+            <span>Today</span>
+          </div>
           <ul class="timeline">
-            <li class="timeline-item">Camera checked in from the backyard<small>2 minutes ago</small></li>
-            <li class="timeline-item">Soil moisture reached its target range<small>18 minutes ago</small></li>
-            <li class="timeline-item">Motion detected near the garden gate<small>1 hour ago</small></li>
+            <li class="timeline-item">
+              Camera checked in from the backyard<small>2 minutes ago</small>
+            </li>
+            <li class="timeline-item">
+              Soil moisture reached its target range<small
+                >18 minutes ago</small
+              >
+            </li>
+            <li class="timeline-item">
+              Motion detected near the garden gate<small>1 hour ago</small>
+            </li>
           </ul>
         </section>
 
         <section class="feed-row" aria-label="Live feed placeholder">
-          <a class="live-feed" href="live-feed.html" aria-label="Open live camera feed">Live feed</a>
+          <a
+            class="live-feed"
+            href="live-feed.html"
+            aria-label="Open live camera feed"
+            >Live feed</a
+          >
           <div class="feed-actions">
             <a class="feed-action" href="recommended-actions.html">Actions</a>
-            <a class="feed-action" href="live-feed.html">Photos
-            </a>
+            <a class="feed-action" href="live-feed.html">Photos </a>
           </div>
         </section>
       </section>
 
-      <section class="content-view" id="add-products-view" aria-labelledby="add-products-heading" hidden>
+      <section
+        class="content-view"
+        id="add-products-view"
+        aria-labelledby="add-products-heading"
+        hidden
+      >
         <h2 class="view-heading" id="add-products-heading">Add Products</h2>
-        <p class="view-intro">Add monitoring tools to keep an eye on your garden.</p>
+        <p class="view-intro">
+          Add monitoring tools to keep an eye on your garden.
+        </p>
         <ul class="view-list">
-          <li><button class="product-card" type="button" data-product-page="camera-setup.html"><strong>Garden camera</strong><small>View your garden from the live feed.</small></button></li>
-          <li><button class="product-card" type="button" data-product-page="sensor-setup.html"><strong>Environmental sensor</strong><small>Track soil moisture, temperature, and humidity.</small></button></li>
-          <li><button class="product-card" type="button" data-product-page="motion-setup.html"><strong>Motion detector</strong><small>Get alerts when movement is detected.</small></button></li>
+          <li>
+            <button
+              class="product-card"
+              type="button"
+              data-product-page="camera-setup.html"
+            >
+              <strong>Garden camera</strong
+              ><small>View your garden from the live feed.</small>
+            </button>
+          </li>
+          <li>
+            <button
+              class="product-card"
+              type="button"
+              data-product-page="sensor-setup.html"
+            >
+              <strong>Environmental sensor</strong
+              ><small>Track soil moisture, temperature, and humidity.</small>
+            </button>
+          </li>
+          <li>
+            <button
+              class="product-card"
+              type="button"
+              data-product-page="motion-setup.html"
+            >
+              <strong>Motion detector</strong
+              ><small>Get alerts when movement is detected.</small>
+            </button>
+          </li>
         </ul>
       </section>
 
-      <section class="content-view product-setup-view" id="camera-setup-view" aria-labelledby="camera-setup-heading" hidden>
-        <h2 class="view-heading" id="camera-setup-heading">Connect Garden Camera</h2>
-        <p class="view-intro">Enter the camera details to attach it to your garden system.</p>
+      <section
+        class="content-view product-setup-view"
+        id="camera-setup-view"
+        aria-labelledby="camera-setup-heading"
+        hidden
+      >
+        <h2 class="view-heading" id="camera-setup-heading">
+          Connect Garden Camera
+        </h2>
+        <p class="view-intro">
+          Enter the camera details to attach it to your garden system.
+        </p>
         <form class="setup-form">
-          <label class="form-field">Camera name<input type="text" placeholder="Backyard camera" required /></label>
-          <label class="form-field">Camera address<input type="text" placeholder="192.168.1.24" required /><small>Use the local address shown in your camera app.</small></label>
-          <label class="form-field">Connection type<select><option>Wi-Fi</option><option>Ethernet</option></select></label>
-          <div class="form-actions"><button class="form-action back-to-products" type="button">Back to products</button><button class="form-action" type="button">Attach camera</button></div>
+          <label class="form-field"
+            >Camera name<input
+              type="text"
+              placeholder="Backyard camera"
+              required
+          /></label>
+          <label class="form-field"
+            >Camera address<input
+              type="text"
+              placeholder="192.168.1.24"
+              required
+            /><small
+              >Use the local address shown in your camera app.</small
+            ></label
+          >
+          <label class="form-field"
+            >Connection type<select>
+              <option>Wi-Fi</option>
+              <option>Ethernet</option>
+            </select></label
+          >
+          <div class="form-actions">
+            <button class="form-action back-to-products" type="button">
+              Back to products</button
+            ><button class="form-action" type="button">Attach camera</button>
+          </div>
         </form>
       </section>
 
-      <section class="content-view product-setup-view" id="sensor-setup-view" aria-labelledby="sensor-setup-heading" hidden>
-        <h2 class="view-heading" id="sensor-setup-heading">Connect Environmental Sensor</h2>
-        <p class="view-intro">Add the sensor that will report conditions in your garden.</p>
+      <section
+        class="content-view product-setup-view"
+        id="sensor-setup-view"
+        aria-labelledby="sensor-setup-heading"
+        hidden
+      >
+        <h2 class="view-heading" id="sensor-setup-heading">
+          Connect Environmental Sensor
+        </h2>
+        <p class="view-intro">
+          Add the sensor that will report conditions in your garden.
+        </p>
         <form class="setup-form">
-          <label class="form-field">Sensor name<input type="text" placeholder="Raised bed sensor" required /></label>
-          <label class="form-field">Sensor ID<input type="text" placeholder="SENSOR-2048" required /><small>Find this ID on the back of the sensor.</small></label>
-          <label class="form-field">Primary reading<select><option>Soil moisture</option><option>Temperature</option><option>Humidity</option></select></label>
-          <div class="form-actions"><button class="form-action back-to-products" type="button">Back to products</button><button class="form-action" type="button">Attach sensor</button></div>
+          <label class="form-field"
+            >Sensor name<input
+              type="text"
+              placeholder="Raised bed sensor"
+              required
+          /></label>
+          <label class="form-field"
+            >Sensor ID<input
+              type="text"
+              placeholder="SENSOR-2048"
+              required
+            /><small>Find this ID on the back of the sensor.</small></label
+          >
+          <label class="form-field"
+            >Primary reading<select>
+              <option>Soil moisture</option>
+              <option>Temperature</option>
+              <option>Humidity</option>
+            </select></label
+          >
+          <div class="form-actions">
+            <button class="form-action back-to-products" type="button">
+              Back to products</button
+            ><button class="form-action" type="button">Attach sensor</button>
+          </div>
         </form>
       </section>
 
-      <section class="content-view product-setup-view" id="motion-setup-view" aria-labelledby="motion-setup-heading" hidden>
-        <h2 class="view-heading" id="motion-setup-heading">Connect Motion Detector</h2>
-        <p class="view-intro">Set up movement alerts for a specific garden area.</p>
+      <section
+        class="content-view product-setup-view"
+        id="motion-setup-view"
+        aria-labelledby="motion-setup-heading"
+        hidden
+      >
+        <h2 class="view-heading" id="motion-setup-heading">
+          Connect Motion Detector
+        </h2>
+        <p class="view-intro">
+          Set up movement alerts for a specific garden area.
+        </p>
         <form class="setup-form">
-          <label class="form-field">Detector name<input type="text" placeholder="Garden gate detector" required /></label>
-          <label class="form-field">Detector ID<input type="text" placeholder="MOTION-1182" required /><small>Find this ID on the detector label.</small></label>
-          <label class="form-field">Monitored area<select><option>Garden gate</option><option>Greenhouse</option><option>Backyard beds</option></select></label>
-          <div class="form-actions"><button class="form-action back-to-products" type="button">Back to products</button><button class="form-action" type="button">Attach detector</button></div>
+          <label class="form-field"
+            >Detector name<input
+              type="text"
+              placeholder="Garden gate detector"
+              required
+          /></label>
+          <label class="form-field"
+            >Detector ID<input
+              type="text"
+              placeholder="MOTION-1182"
+              required
+            /><small>Find this ID on the detector label.</small></label
+          >
+          <label class="form-field"
+            >Monitored area<select>
+              <option>Garden gate</option>
+              <option>Greenhouse</option>
+              <option>Backyard beds</option>
+            </select></label
+          >
+          <div class="form-actions">
+            <button class="form-action back-to-products" type="button">
+              Back to products</button
+            ><button class="form-action" type="button">Attach detector</button>
+          </div>
         </form>
       </section>
 
-      <section class="content-view" id="user-settings-view" aria-labelledby="user-settings-heading" hidden>
+      <section
+        class="content-view"
+        id="user-settings-view"
+        aria-labelledby="user-settings-heading"
+        hidden
+      >
         <h2 class="view-heading" id="user-settings-heading">User Settings</h2>
-        <p class="view-intro">Manage your profile and garden sharing preferences.</p>
+        <p class="view-intro">
+          Manage your profile and garden sharing preferences.
+        </p>
         <div class="view-list">
-          <label class="view-list-item view-setting"><span><strong>Profile name</strong><small>Name shown to your garden circle</small></span><input class="view-text" type="text" value="Garden Keeper" aria-label="Profile name" /></label>
-          <label class="view-list-item view-setting"><span><strong>Email updates</strong><small>Receive monthly garden summaries</small></span><input type="checkbox" checked /></label>
-          <label class="view-list-item view-setting"><span><strong>Garden sharing</strong><small>Let friends view your garden progress</small></span><input type="checkbox" checked /></label>
-          <label class="view-list-item view-setting"><span><strong>Weekly summary</strong><small>Get a weekly care recap</small></span><input type="checkbox" /></label>
+          <label class="view-list-item view-setting"
+            ><span
+              ><strong>Profile name</strong
+              ><small>Name shown to your garden circle</small></span
+            ><input
+              class="view-text"
+              type="text"
+              value="Garden Keeper"
+              aria-label="Profile name"
+          /></label>
+          <label class="view-list-item view-setting"
+            ><span
+              ><strong>Email updates</strong
+              ><small>Receive monthly garden summaries</small></span
+            ><input type="checkbox" checked
+          /></label>
+          <label class="view-list-item view-setting"
+            ><span
+              ><strong>Garden sharing</strong
+              ><small>Let friends view your garden progress</small></span
+            ><input type="checkbox" checked
+          /></label>
+          <label class="view-list-item view-setting"
+            ><span
+              ><strong>Weekly summary</strong
+              ><small>Get a weekly care recap</small></span
+            ><input type="checkbox"
+          /></label>
         </div>
       </section>
 
-      <section class="content-view" id="friends-view" aria-labelledby="friends-heading" hidden>
+      <section
+        class="content-view"
+        id="friends-view"
+        aria-labelledby="friends-heading"
+        hidden
+      >
         <h2 class="view-heading" id="friends-heading">Friends</h2>
         <p class="view-intro">See updates from your garden circle.</p>
         <div class="view-list">
-          <div class="view-list-item friend-item"><span class="friend-avatar">AM</span><span><strong>Alex Morgan</strong><small>Last shared a garden update today</small></span></div>
-          <div class="view-list-item friend-item"><span class="friend-avatar">JL</span><span><strong>Jamie Lee</strong><small>Growing herbs and vegetables</small></span></div>
-          <div class="view-list-item friend-item"><span class="friend-avatar">RK</span><span><strong>Riley Kim</strong><small>Joined your garden circle</small></span></div>
+          <div class="view-list-item friend-item">
+            <span class="friend-avatar">AM</span
+            ><span
+              ><strong>Alex Morgan</strong
+              ><small>Last shared a garden update today</small></span
+            >
+          </div>
+          <div class="view-list-item friend-item">
+            <span class="friend-avatar">JL</span
+            ><span
+              ><strong>Jamie Lee</strong
+              ><small>Growing herbs and vegetables</small></span
+            >
+          </div>
+          <div class="view-list-item friend-item">
+            <span class="friend-avatar">RK</span
+            ><span
+              ><strong>Riley Kim</strong
+              ><small>Joined your garden circle</small></span
+            >
+          </div>
         </div>
       </section>
     </main>
-    <script>
-      const menuTrigger = document.querySelector(".menu-trigger");
-      const menuPanel = document.querySelector(".menu-panel");
-      const menuLabel = document.querySelector(".menu-label");
-      const menuOptions = document.querySelectorAll(".menu-option");
-      const weatherTrigger = document.querySelector(".weather");
-      const weatherPanel = document.querySelector(".weather-panel");
-      const settingsTrigger = document.querySelector(".settings");
-      const settingsPanel = document.querySelector(".settings-panel");
-      const darkModeToggle = document.querySelector(".dark-mode-toggle");
-      const contentViews = document.querySelectorAll(".content-view");
-      const userImage = document.querySelector(".user-image");
-      const productOptions = document.querySelectorAll(".product-card");
-      const backToProductsButtons = document.querySelectorAll(".back-to-products");
-      const weatherCondition = document.querySelector("#weather-condition");
-      const weatherLocation = document.querySelector("#weather-location");
-      const weatherTemperature = document.querySelector("#weather-temperature");
-      const weatherHumidity = document.querySelector("#weather-humidity");
-      const weatherWind = document.querySelector("#weather-wind");
-      const weatherRain = document.querySelector("#weather-rain");
-      const dashboardTemperature = document.querySelector("#dashboard-temperature");
-      const dashboardWeatherNote = document.querySelector("#dashboard-weather-note");
-      const weatherForecast = Array.from({ length: 4 }, (_, index) => ({
-        day: document.querySelector(`#forecast-day-${index}`),
-        temperature: document.querySelector(`#forecast-temperature-${index}`),
-        condition: document.querySelector(`#forecast-condition-${index}`)
-      }));
-
-      const savedDarkMode = localStorage.getItem("garden-guard-dark-mode") === "true";
-      document.body.classList.toggle("dark-mode", savedDarkMode);
-      darkModeToggle.checked = savedDarkMode;
-
-      const updateMenuOptions = (activeView) => {
-        menuOptions.forEach((option) => {
-          option.hidden = option.dataset.view === activeView;
-        });
-      };
-
-      updateMenuOptions("main-view");
-
-      const weatherCodeLabels = {
-        0: "Clear", 1: "Mostly clear", 2: "Partly cloudy", 3: "Overcast",
-        45: "Foggy", 48: "Rime fog", 51: "Light drizzle", 53: "Drizzle", 55: "Heavy drizzle",
-        61: "Light rain", 63: "Rain", 65: "Heavy rain", 71: "Light snow", 73: "Snow", 75: "Heavy snow",
-        80: "Rain showers", 81: "Rain showers", 82: "Heavy showers", 95: "Thunderstorm", 96: "Hailstorm", 99: "Hailstorm"
-      };
-
-      const getUserCoordinates = () => {
-        const savedCoordinates = localStorage.getItem("garden-guard-location");
-        if (savedCoordinates) {
-          try {
-            const coordinates = JSON.parse(savedCoordinates);
-            if (Number.isFinite(coordinates.latitude) && Number.isFinite(coordinates.longitude)) {
-              return Promise.resolve(coordinates);
-            }
-          } catch {
-            localStorage.removeItem("garden-guard-location");
-          }
-        }
-
-        if (!navigator.geolocation) {
-          return Promise.reject(new Error("Location is not available in this browser."));
-        }
-
-        return new Promise((resolve, reject) => {
-          navigator.geolocation.getCurrentPosition(
-            ({ coords }) => {
-              const coordinates = { latitude: coords.latitude, longitude: coords.longitude };
-              localStorage.setItem("garden-guard-location", JSON.stringify(coordinates));
-              resolve(coordinates);
-            },
-            () => reject(new Error("Location permission was denied.")),
-            { enableHighAccuracy: false, timeout: 10000, maximumAge: 900000 }
-          );
-        });
-      };
-
-      const formatForecastDay = (dateString, index, timeZone) => {
-        if (index === 0) return "Today";
-        return new Intl.DateTimeFormat(undefined, { weekday: "short", timeZone }).format(new Date(`${dateString}T12:00:00`));
-      };
-
-      const loadWeather = async () => {
-        weatherCondition.textContent = "Loading";
-        weatherLocation.textContent = "Finding your location...";
-
-        try {
-          const { latitude, longitude } = await getUserCoordinates();
-          const params = new URLSearchParams({
-            latitude,
-            longitude,
-            current: "temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code",
-            hourly: "precipitation_probability",
-            daily: "temperature_2m_max,weather_code,precipitation_probability_max",
-            temperature_unit: "fahrenheit",
-            wind_speed_unit: "mph",
-            timezone: "auto",
-            forecast_days: "4"
-          });
-          const response = await fetch(`https://api.open-meteo.com/v1/forecast?${params}`);
-          if (!response.ok) throw new Error("Weather service is unavailable.");
-          const weather = await response.json();
-
-          weatherCondition.textContent = weatherCodeLabels[weather.current.weather_code] || "Current conditions";
-          weatherLocation.textContent = `Your location · Updated ${new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}`;
-          weatherTemperature.textContent = `${Math.round(weather.current.temperature_2m)} F`;
-          weatherHumidity.textContent = `${Math.round(weather.current.relative_humidity_2m)}%`;
-          weatherWind.textContent = `${Math.round(weather.current.wind_speed_10m)} mph`;
-          weatherRain.textContent = `${weather.hourly.precipitation_probability[0]}%`;
-          dashboardTemperature.textContent = `${Math.round(weather.current.temperature_2m)} F`;
-          dashboardWeatherNote.textContent = weatherCodeLabels[weather.current.weather_code] || "Current conditions";
-
-          weatherForecast.forEach((forecast, index) => {
-            forecast.day.textContent = formatForecastDay(weather.daily.time[index], index, weather.timezone);
-            forecast.temperature.textContent = `${Math.round(weather.daily.temperature_2m_max[index])} F`;
-            forecast.condition.textContent = weatherCodeLabels[weather.daily.weather_code[index]] || "Variable";
-          });
-        } catch (error) {
-          weatherCondition.textContent = "Unavailable";
-          weatherLocation.textContent = `${error.message} Open weather to try again.`;
-          dashboardTemperature.textContent = "--";
-          dashboardWeatherNote.textContent = "Weather unavailable";
-        }
-      };
-
-      loadWeather();
-
-      menuTrigger.addEventListener("click", () => {
-        weatherTrigger.setAttribute("aria-expanded", "false");
-        weatherPanel.hidden = true;
-        settingsTrigger.setAttribute("aria-expanded", "false");
-        settingsPanel.hidden = true;
-        const isOpen = menuTrigger.getAttribute("aria-expanded") === "true";
-        menuTrigger.setAttribute("aria-expanded", String(!isOpen));
-        menuPanel.hidden = isOpen;
-      });
-
-      menuOptions.forEach((option) => {
-        option.addEventListener("click", () => {
-          menuLabel.textContent = option.textContent;
-          menuTrigger.setAttribute("aria-expanded", "false");
-          menuPanel.hidden = true;
-          contentViews.forEach((view) => {
-            view.hidden = view.id !== option.dataset.view;
-          });
-          updateMenuOptions(option.dataset.view);
-        });
-      });
-
-      productOptions.forEach((product) => {
-        product.addEventListener("click", () => {
-          window.location.href = product.dataset.productPage;
-        });
-      });
-
-      backToProductsButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-          contentViews.forEach((view) => {
-            view.hidden = view.id !== "add-products-view";
-          });
-        });
-      });
-
-      userImage.addEventListener("click", () => {
-        menuLabel.textContent = "User Settings";
-        contentViews.forEach((view) => {
-          view.hidden = view.id !== "user-settings-view";
-        });
-        updateMenuOptions("user-settings-view");
-      });
-
-      weatherTrigger.addEventListener("click", (event) => {
-        event.stopPropagation();
-        if (weatherCondition.textContent === "Unavailable") loadWeather();
-        menuTrigger.setAttribute("aria-expanded", "false");
-        menuPanel.hidden = true;
-        settingsTrigger.setAttribute("aria-expanded", "false");
-        settingsPanel.hidden = true;
-        const isOpen = weatherTrigger.getAttribute("aria-expanded") === "true";
-        weatherTrigger.setAttribute("aria-expanded", String(!isOpen));
-        weatherPanel.hidden = isOpen;
-      });
-
-      settingsTrigger.addEventListener("click", (event) => {
-        event.stopPropagation();
-        menuTrigger.setAttribute("aria-expanded", "false");
-        menuPanel.hidden = true;
-        weatherTrigger.setAttribute("aria-expanded", "false");
-        weatherPanel.hidden = true;
-        const isOpen = settingsTrigger.getAttribute("aria-expanded") === "true";
-        settingsTrigger.setAttribute("aria-expanded", String(!isOpen));
-        settingsPanel.hidden = isOpen;
-      });
-
-      darkModeToggle.addEventListener("change", () => {
-        document.body.classList.toggle("dark-mode", darkModeToggle.checked);
-        localStorage.setItem("garden-guard-dark-mode", String(darkModeToggle.checked));
-      });
-
-      document.addEventListener("click", (event) => {
-        if (!event.target.closest(".menu-wrap")) {
-          menuTrigger.setAttribute("aria-expanded", "false");
-          menuPanel.hidden = true;
-        }
-        if (!event.target.closest(".weather-wrap")) {
-          weatherTrigger.setAttribute("aria-expanded", "false");
-          weatherPanel.hidden = true;
-        }
-        if (!event.target.closest(".settings-wrap")) {
-          settingsTrigger.setAttribute("aria-expanded", "false");
-          settingsPanel.hidden = true;
-        }
-      });
-    </script>
+    <script src="app.js"></script>
   </body>
 </html>
