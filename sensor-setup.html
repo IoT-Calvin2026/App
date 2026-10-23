@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Connect Sensor | Garden Guard</title>
+    <link rel="stylesheet" href="setup.css" />
+  </head>
+  <body>
+    <main class="page">
+      <h1>Connect Environmental Sensor</h1>
+      <div class="progress" aria-label="Connection progress">
+        <span class="progress-step active">1. Details</span
+        ><span class="progress-step">2. Connect</span
+        ><span class="progress-step">3. Ready</span>
+      </div>
+      <p class="intro">
+        Add the sensor that will report conditions in your garden.
+      </p>
+      <form id="setup-form">
+        <label
+          >Sensor name<input
+            type="text"
+            placeholder="Raised bed sensor"
+            required
+        /></label>
+        <label
+          >Sensor ID<input
+            type="text"
+            placeholder="SENSOR-2048"
+            required
+          /><small>Find this ID on the back of the sensor.</small></label
+        >
+        <label
+          >Primary reading<select>
+            <option>Soil moisture</option>
+            <option>Temperature</option>
+            <option>Humidity</option>
+          </select></label
+        >
+        <div class="actions">
+          <a href="index.html">Back to Garden Guard</a
+          ><button
+            class="primary"
+            type="submit"
+            data-success-text="Sensor attached"
+          >
+            Attach sensor
+          </button>
+        </div>
+      </form>
+    </main>
+    <script src="setup.js"></script>
+  </body>
+</html>

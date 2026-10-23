@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Connect Motion Detector | Garden Guard</title>
+    <link rel="stylesheet" href="setup.css" />
+  </head>
+  <body>
+    <main class="page">
+      <h1>Connect Motion Detector</h1>
+      <div class="progress" aria-label="Connection progress">
+        <span class="progress-step active">1. Details</span
+        ><span class="progress-step">2. Connect</span
+        ><span class="progress-step">3. Ready</span>
+      </div>
+      <p class="intro">Set up movement alerts for a specific garden area.</p>
+      <form id="setup-form">
+        <label
+          >Detector name<input
+            type="text"
+            placeholder="Garden gate detector"
+            required
+        /></label>
+        <label
+          >Detector ID<input
+            type="text"
+            placeholder="MOTION-1182"
+            required
+          /><small>Find this ID on the detector label.</small></label
+        >
+        <label
+          >Monitored area<select>
+            <option>Garden gate</option>
+            <option>Greenhouse</option>
+            <option>Backyard beds</option>
+          </select></label
+        >
+        <div class="actions">
+          <a href="index.html">Back to Garden Guard</a
+          ><button
+            class="primary"
+            type="submit"
+            data-success-text="Detector attached"
+          >
+            Attach detector
+          </button>
+        </div>
+      </form>
+    </main>
+    <script src="setup.js"></script>
+  </body>
+</html>

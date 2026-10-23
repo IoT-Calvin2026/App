@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Connect Camera | Garden Guard</title>
+    <link rel="stylesheet" href="setup.css" />
+  </head>
+  <body>
+    <main class="page">
+      <h1>Connect Garden Camera</h1>
+      <div class="progress" aria-label="Connection progress">
+        <span class="progress-step active">1. Details</span
+        ><span class="progress-step">2. Connect</span
+        ><span class="progress-step">3. Ready</span>
+      </div>
+      <p class="intro">
+        Enter the camera details to attach it to your garden system.
+      </p>
+      <form id="setup-form">
+        <label
+          >Camera name<input type="text" placeholder="Backyard camera" required
+        /></label>
+        <label
+          >Camera address<input
+            type="text"
+            placeholder="192.168.1.24"
+            required
+          /><small
+            >Use the local address shown in your camera app.</small
+          ></label
+        >
+        <label
+          >Connection type<select>
+            <option>Wi-Fi</option>
+            <option>Ethernet</option>
+          </select></label
+        >
+        <div class="actions">
+          <a href="index.html">Back to Garden Guard</a
+          ><button
+            class="primary"
+            type="submit"
+            data-success-text="Camera attached"
+          >
+            Attach camera
+          </button>
+        </div>
+      </form>
+    </main>
+    <script src="setup.js"></script>
+  </body>
+</html>
