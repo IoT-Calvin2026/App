@@ -3,37 +3,37 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Connect Camera | Garden Guard</title>
-    <link rel="stylesheet" href="setup.css" />
+    <title>Connect Motion Detector | Garden Guard</title>
+    <link rel="stylesheet" href="../styles/setup.css" />
   </head>
   <body>
     <main class="page">
-      <h1>Connect Garden Camera</h1>
+      <h1>Connect Motion Detector</h1>
       <div class="progress" aria-label="Connection progress">
         <span class="progress-step active">1. Details</span
         ><span class="progress-step">2. Connect</span
         ><span class="progress-step">3. Ready</span>
       </div>
-      <p class="intro">
-        Enter the camera details to attach it to your garden system.
-      </p>
+      <p class="intro">Set up movement alerts for a specific garden area.</p>
       <form id="setup-form">
         <label
-          >Camera name<input type="text" placeholder="Backyard camera" required
+          >Detector name<input
+            type="text"
+            placeholder="Garden gate detector"
+            required
         /></label>
         <label
-          >Camera address<input
+          >Detector ID<input
             type="text"
-            placeholder="192.168.1.24"
+            placeholder="MOTION-1182"
             required
-          /><small
-            >Use the local address shown in your camera app.</small
-          ></label
+          /><small>Find this ID on the detector label.</small></label
         >
         <label
-          >Connection type<select>
-            <option>Wi-Fi</option>
-            <option>Ethernet</option>
+          >Monitored area<select>
+            <option>Garden gate</option>
+            <option>Greenhouse</option>
+            <option>Backyard beds</option>
           </select></label
         >
         <div class="actions">
@@ -41,13 +41,13 @@
           ><button
             class="primary"
             type="submit"
-            data-success-text="Camera attached"
+            data-success-text="Detector attached"
           >
-            Attach camera
+            Attach detector
           </button>
         </div>
       </form>
     </main>
-    <script src="setup.js"></script>
+    <script src="../javascript/setup.js"></script>
   </body>
 </html>

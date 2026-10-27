@@ -3,39 +3,37 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Connect Sensor | Garden Guard</title>
-    <link rel="stylesheet" href="setup.css" />
+    <title>Connect Camera | Garden Guard</title>
+    <link rel="stylesheet" href="../styles/setup.css" />
   </head>
   <body>
     <main class="page">
-      <h1>Connect Environmental Sensor</h1>
+      <h1>Connect Garden Camera</h1>
       <div class="progress" aria-label="Connection progress">
         <span class="progress-step active">1. Details</span
         ><span class="progress-step">2. Connect</span
         ><span class="progress-step">3. Ready</span>
       </div>
       <p class="intro">
-        Add the sensor that will report conditions in your garden.
+        Enter the camera details to attach it to your garden system.
       </p>
       <form id="setup-form">
         <label
-          >Sensor name<input
-            type="text"
-            placeholder="Raised bed sensor"
-            required
+          >Camera name<input type="text" placeholder="Backyard camera" required
         /></label>
         <label
-          >Sensor ID<input
+          >Camera address<input
             type="text"
-            placeholder="SENSOR-2048"
+            placeholder="192.168.1.24"
             required
-          /><small>Find this ID on the back of the sensor.</small></label
+          /><small
+            >Use the local address shown in your camera app.</small
+          ></label
         >
         <label
-          >Primary reading<select>
-            <option>Soil moisture</option>
-            <option>Temperature</option>
-            <option>Humidity</option>
+          >Connection type<select>
+            <option>Wi-Fi</option>
+            <option>Ethernet</option>
           </select></label
         >
         <div class="actions">
@@ -43,13 +41,13 @@
           ><button
             class="primary"
             type="submit"
-            data-success-text="Sensor attached"
+            data-success-text="Camera attached"
           >
-            Attach sensor
+            Attach camera
           </button>
         </div>
       </form>
     </main>
-    <script src="setup.js"></script>
+    <script src="../javascript/setup.js"></script>
   </body>
 </html>

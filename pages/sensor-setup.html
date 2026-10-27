@@ -3,37 +3,39 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Connect Motion Detector | Garden Guard</title>
-    <link rel="stylesheet" href="setup.css" />
+    <title>Connect Sensor | Garden Guard</title>
+    <link rel="stylesheet" href="../styles/setup.css" />
   </head>
   <body>
     <main class="page">
-      <h1>Connect Motion Detector</h1>
+      <h1>Connect Environmental Sensor</h1>
       <div class="progress" aria-label="Connection progress">
         <span class="progress-step active">1. Details</span
         ><span class="progress-step">2. Connect</span
         ><span class="progress-step">3. Ready</span>
       </div>
-      <p class="intro">Set up movement alerts for a specific garden area.</p>
+      <p class="intro">
+        Add the sensor that will report conditions in your garden.
+      </p>
       <form id="setup-form">
         <label
-          >Detector name<input
+          >Sensor name<input
             type="text"
-            placeholder="Garden gate detector"
+            placeholder="Raised bed sensor"
             required
         /></label>
         <label
-          >Detector ID<input
+          >Sensor ID<input
             type="text"
-            placeholder="MOTION-1182"
+            placeholder="SENSOR-2048"
             required
-          /><small>Find this ID on the detector label.</small></label
+          /><small>Find this ID on the back of the sensor.</small></label
         >
         <label
-          >Monitored area<select>
-            <option>Garden gate</option>
-            <option>Greenhouse</option>
-            <option>Backyard beds</option>
+          >Primary reading<select>
+            <option>Soil moisture</option>
+            <option>Temperature</option>
+            <option>Humidity</option>
           </select></label
         >
         <div class="actions">
@@ -41,13 +43,13 @@
           ><button
             class="primary"
             type="submit"
-            data-success-text="Detector attached"
+            data-success-text="Sensor attached"
           >
-            Attach detector
+            Attach sensor
           </button>
         </div>
       </form>
     </main>
-    <script src="setup.js"></script>
+    <script src="../javascript/setup.js"></script>
   </body>
 </html>
