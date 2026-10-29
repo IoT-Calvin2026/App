@@ -169,8 +169,11 @@
         <section class="status-grid" aria-label="Garden status">
           <article class="status-card">
             <span class="status-card-label">System health</span
-            ><strong class="status-card-value" id="system-health-status">Checking</strong
-            ><span class="status-card-note" id="system-health-note">Connecting to garden services</span>
+            ><strong class="status-card-value" id="system-health-status"
+              >Checking</strong
+            ><span class="status-card-note" id="system-health-note"
+              >Connecting to garden services</span
+            >
           </article>
           <article class="status-card">
             <span class="status-card-label">Today</span
@@ -182,13 +185,19 @@
           </article>
           <article class="status-card">
             <span class="status-card-label">Soil moisture</span
-            ><strong class="status-card-value" id="dashboard-soil-moisture">--</strong
-            ><span class="status-card-note" id="dashboard-soil-note">Waiting for latest reading</span>
+            ><strong class="status-card-value" id="dashboard-soil-moisture"
+              >--</strong
+            ><span class="status-card-note" id="dashboard-soil-note"
+              >Waiting for latest reading</span
+            >
           </article>
           <article class="status-card">
             <span class="status-card-label">Motion alerts</span
-            ><strong class="status-card-value" id="dashboard-motion-alerts">--</strong
-            ><span class="status-card-note" id="dashboard-motion-note">Waiting for motion data</span>
+            ><strong class="status-card-value" id="dashboard-motion-alerts"
+              >--</strong
+            ><span class="status-card-note" id="dashboard-motion-note"
+              >Waiting for motion data</span
+            >
           </article>
         </section>
 
@@ -218,7 +227,11 @@
               <span class="device-icon" aria-hidden="true">◌</span
               ><strong>Soil sensor</strong><small>64% moisture</small>
             </button>
-            <button class="device-card motion-card" type="button" aria-label="View motion data">
+            <button
+              class="device-card motion-card"
+              type="button"
+              aria-label="View motion data"
+            >
               <span class="device-icon" aria-hidden="true">⌁</span
               ><strong>Motion detector</strong><small>2 recent alerts</small>
             </button>
@@ -257,6 +270,24 @@
             <a class="feed-action" href="live-feed.html">Photos </a>
           </div>
         </section>
+      </section>
+
+      <section
+        class="content-view"
+        id="motion-data-view"
+        aria-labelledby="motion-data-heading"
+        hidden
+      >
+        <p class="dashboard-kicker">Motion detector</p>
+        <h2 class="view-heading" id="motion-data-heading">Recent motion</h2>
+        <p class="view-intro" id="motion-data-summary">
+          Motion data is loaded from the backend.
+        </p>
+        <div class="form-actions">
+          <button class="form-action back-to-dashboard" type="button">
+            Back to dashboard
+          </button>
+        </div>
       </section>
 
       <section
@@ -554,6 +585,6 @@
       </section>
     </main>
     <script src="api.js"></script>
-    <script src="app.js"></script>
+    <script src="javascript/app.js"></script>
   </body>
 </html>

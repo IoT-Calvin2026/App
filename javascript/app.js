@@ -9,10 +9,9 @@ const settingsPanel = document.querySelector(".settings-panel");
 const darkModeToggle = document.querySelector(".dark-mode-toggle");
 const contentViews = document.querySelectorAll(".content-view");
 const userImage = document.querySelector(".user-image");
-const sensorCard = document.querySelector(".sensor-card");
 const productOptions = document.querySelectorAll(".product-card");
 const backToProductsButtons = document.querySelectorAll(".back-to-products");
-const backToDashboardButton = document.querySelector(".back-to-dashboard");
+const backToDashboardButtons = document.querySelectorAll(".back-to-dashboard");
 const weatherCondition = document.querySelector("#weather-condition");
 const weatherLocation = document.querySelector("#weather-location");
 const weatherTemperature = document.querySelector("#weather-temperature");
@@ -53,15 +52,18 @@ const getReadingValue = (reading, keys) => {
 };
 
 const formatReading = (value, suffix = "") =>
-  value === null || value === undefined || value === "" ? "--" : `${value}${suffix}`;
+  value === null || value === undefined || value === ""
+    ? "--"
+    : `${value}${suffix}`;
 
 const loadGardenData = async () => {
-  const [healthResult, latestResult, motionResult, eventsResult] = await Promise.allSettled([
-    window.gardenGuardApi.health(),
-    window.gardenGuardApi.latestReadings(),
-    window.gardenGuardApi.motion(),
-    window.gardenGuardApi.events(),
-  ]);
+  const [healthResult, latestResult, motionResult, eventsResult] =
+    await Promise.allSettled([
+      window.gardenGuardApi.health(),
+      window.gardenGuardApi.latestReadings(),
+      window.gardenGuardApi.motion(),
+      window.gardenGuardApi.events(),
+    ]);
 
   if (healthResult.status === "fulfilled") {
     systemHealthStatus.textContent = "Excellent";
@@ -73,15 +75,20 @@ const loadGardenData = async () => {
 
   if (latestResult.status === "fulfilled") {
     const latest = latestResult.value || {};
-    const soil = latest.soil_moisture || latest.soilMoisture || latest.soil_moisture_reading;
+    const soil =
+      latest.soil_moisture ||
+      latest.soilMoisture ||
+      latest.soil_moisture_reading;
     const moisture = getReadingValue(soil, ["soil_moisture", "moisture", "value"]);
     const temperature = getReadingValue(soil, ["temperature", "temperature_f"]);
     const humidity = getReadingValue(soil, ["humidity", "relative_humidity"]);
     const timestamp = getReadingValue(soil, ["timestamp", "created_at", "updated_at"]);
     dashboardSoilMoisture.textContent = formatReading(moisture, "%");
-    dashboardSoilNote.textContent = moisture === null ? "No soil reading available" : "Latest soil reading";
+    dashboardSoilNote.textContent =
+      moisture === null ? "No soil reading available" : "Latest soil reading";
     sensorSoilMoisture.textContent = formatReading(moisture, "%");
-    sensorSoilNote.textContent = moisture === null ? "No soil reading available" : "Latest soil reading";
+    sensorSoilNote.textContent =
+      moisture === null ? "No soil reading available" : "Latest soil reading";
     sensorTemperature.textContent = formatReading(temperature, " F");
     sensorHumidity.textContent = formatReading(humidity, "%");
     sensorLastReading.textContent = timestamp ? new Date(timestamp).toLocaleString() : "--";
@@ -110,7 +117,8 @@ const loadGardenData = async () => {
         ...events.slice(0, 5).map((event) => {
           const item = document.createElement("li");
           item.className = "timeline-item";
-          item.textContent = event.description || event.message || event.type || "Garden event";
+          item.textContent =
+            event.description || event.message || event.type || "Garden event";
           const detail = document.createElement("small");
           detail.textContent = event.timestamp || event.created_at || "Recent";
           item.append(detail);
@@ -325,12 +333,14 @@ userImage.addEventListener("click", () => {
   updateMenuOptions("user-settings-view");
 });
 
-backToDashboardButton.addEventListener("click", () => {
-  menuLabel.textContent = "Home";
-  contentViews.forEach((view) => {
-    view.hidden = view.id !== "main-view";
+backToDashboardButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    menuLabel.textContent = "Home";
+    contentViews.forEach((view) => {
+      view.hidden = view.id !== "main-view";
+    });
+    updateMenuOptions("main-view");
   });
-  updateMenuOptions("main-view");
 });
 
 weatherTrigger.addEventListener("click", (event) => {

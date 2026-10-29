@@ -1,6 +1,6 @@
 # Garden Guard App
 
-The frontend connects to the local Garden Guard API at `http://localhost:5000`
+The frontend connects to the local Garden Guard API at `http://localhost:5001`
 by default. All routes are
 centralized in `api.js`, including collection and document-detail methods for
 events, motion, and soil moisture.
