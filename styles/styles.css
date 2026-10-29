@@ -618,6 +618,21 @@ body.dark-mode .device-card {
   border-radius: 12px;
   background: #f7fbf5;
   box-shadow: 0 5px 12px rgba(32, 66, 42, 0.04);
+  color: inherit;
+  text-align: left;
+}
+
+button.device-card {
+  width: 100%;
+  font: inherit;
+  cursor: pointer;
+}
+
+.sensor-card:hover {
+  border-color: #79a477;
+  background: #eef7eb;
+  box-shadow: 0 8px 16px rgba(58, 103, 62, 0.1);
+  transform: translateY(-1px);
 }
 
 .device-icon {
@@ -640,6 +655,82 @@ body.dark-mode .device-card {
   color: #5e8f5b;
   font:
     0.68rem -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+}
+
+.sensor-detail-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.sensor-detail-heading .dashboard-kicker {
+  margin-top: 0;
+}
+
+.sensor-status {
+  flex: 0 0 auto;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #eaf4e8;
+  color: #5e8f5b;
+  font:
+    700 0.7rem -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  text-transform: uppercase;
+}
+
+.sensor-reading-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.sensor-reading {
+  min-height: 126px;
+  padding: 16px;
+  border: 1px solid #c9dcc8;
+  border-radius: 14px;
+  background: #f7fbf5;
+}
+
+.sensor-reading-primary {
+  border-color: #a9c9a6;
+  background: #eaf4e8;
+}
+
+.sensor-reading-label,
+.sensor-reading strong,
+.sensor-reading small {
+  display: block;
+}
+
+.sensor-reading-label {
+  color: #6b856d;
+  font:
+    700 0.7rem -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  text-transform: uppercase;
+}
+
+.sensor-reading strong {
+  margin-top: 12px;
+  color: #234936;
+  font-size: 1.55rem;
+}
+
+.sensor-reading small {
+  margin-top: 4px;
+  color: #6b856d;
+  font:
+    0.72rem -apple-system,
     BlinkMacSystemFont,
     "Segoe UI",
     sans-serif;
@@ -888,6 +979,26 @@ body.dark-mode .friend-avatar {
   background: #465c5a;
 }
 
+body.dark-mode .sensor-status {
+  background: #405652;
+  color: #b9d7bd;
+}
+
+body.dark-mode .sensor-reading,
+body.dark-mode .sensor-reading-primary {
+  background: #3a4652;
+  border-color: #667582;
+}
+
+body.dark-mode .sensor-reading-label,
+body.dark-mode .sensor-reading small {
+  color: #c1cbd0;
+}
+
+body.dark-mode .sensor-reading strong {
+  color: #edf1ec;
+}
+
 .profile-row {
   display: flex;
   align-items: center;
@@ -1048,6 +1159,10 @@ body.dark-mode .friend-avatar {
 
   .status-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .sensor-reading-grid {
+    grid-template-columns: 1fr;
   }
 
   .dashboard-intro {
