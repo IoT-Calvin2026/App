@@ -9,8 +9,10 @@ const settingsPanel = document.querySelector(".settings-panel");
 const darkModeToggle = document.querySelector(".dark-mode-toggle");
 const contentViews = document.querySelectorAll(".content-view");
 const userImage = document.querySelector(".user-image");
+const sensorCard = document.querySelector(".sensor-card");
 const productOptions = document.querySelectorAll(".product-card");
 const backToProductsButtons = document.querySelectorAll(".back-to-products");
+const backToDashboardButton = document.querySelector(".back-to-dashboard");
 const weatherCondition = document.querySelector("#weather-condition");
 const weatherLocation = document.querySelector("#weather-location");
 const weatherTemperature = document.querySelector("#weather-temperature");
@@ -19,6 +21,20 @@ const weatherWind = document.querySelector("#weather-wind");
 const weatherRain = document.querySelector("#weather-rain");
 const dashboardTemperature = document.querySelector("#dashboard-temperature");
 const dashboardWeatherNote = document.querySelector("#dashboard-weather-note");
+const systemHealthStatus = document.querySelector("#system-health-status");
+const systemHealthNote = document.querySelector("#system-health-note");
+const dashboardSoilMoisture = document.querySelector("#dashboard-soil-moisture");
+const dashboardSoilNote = document.querySelector("#dashboard-soil-note");
+const dashboardMotionAlerts = document.querySelector("#dashboard-motion-alerts");
+const dashboardMotionNote = document.querySelector("#dashboard-motion-note");
+const sensorSoilMoisture = document.querySelector("#sensor-soil-moisture");
+const sensorSoilNote = document.querySelector("#sensor-soil-note");
+const sensorTemperature = document.querySelector("#sensor-temperature");
+const sensorHumidity = document.querySelector("#sensor-humidity");
+const sensorLastReading = document.querySelector("#sensor-last-reading");
+const sensorReadingNote = document.querySelector("#sensor-reading-note");
+const motionCard = document.querySelector(".motion-card");
+const activityTimeline = document.querySelector("#activity-timeline");
 const weatherForecast = Array.from({ length: 4 }, (_, index) => ({
   day: document.querySelector(`#forecast-day-${index}`),
   temperature: document.querySelector(`#forecast-temperature-${index}`),
@@ -29,6 +45,81 @@ const dropdowns = [
   { trigger: weatherTrigger, panel: weatherPanel, wrapper: ".weather-wrap" },
   { trigger: settingsTrigger, panel: settingsPanel, wrapper: ".settings-wrap" },
 ];
+
+const getReadingValue = (reading, keys) => {
+  if (!reading || typeof reading !== "object") return null;
+  const key = keys.find((candidate) => reading[candidate] !== undefined);
+  return key ? reading[key] : null;
+};
+
+const formatReading = (value, suffix = "") =>
+  value === null || value === undefined || value === "" ? "--" : `${value}${suffix}`;
+
+const loadGardenData = async () => {
+  const [healthResult, latestResult, motionResult, eventsResult] = await Promise.allSettled([
+    window.gardenGuardApi.health(),
+    window.gardenGuardApi.latestReadings(),
+    window.gardenGuardApi.motion(),
+    window.gardenGuardApi.events(),
+  ]);
+
+  if (healthResult.status === "fulfilled") {
+    systemHealthStatus.textContent = "Excellent";
+    systemHealthNote.textContent = "All devices online";
+  } else {
+    systemHealthStatus.textContent = "Offline";
+    systemHealthNote.textContent = "Backend connection unavailable";
+  }
+
+  if (latestResult.status === "fulfilled") {
+    const latest = latestResult.value || {};
+    const soil = latest.soil_moisture || latest.soilMoisture || latest.soil_moisture_reading;
+    const moisture = getReadingValue(soil, ["soil_moisture", "moisture", "value"]);
+    const temperature = getReadingValue(soil, ["temperature", "temperature_f"]);
+    const humidity = getReadingValue(soil, ["humidity", "relative_humidity"]);
+    const timestamp = getReadingValue(soil, ["timestamp", "created_at", "updated_at"]);
+    dashboardSoilMoisture.textContent = formatReading(moisture, "%");
+    dashboardSoilNote.textContent = moisture === null ? "No soil reading available" : "Latest soil reading";
+    sensorSoilMoisture.textContent = formatReading(moisture, "%");
+    sensorSoilNote.textContent = moisture === null ? "No soil reading available" : "Latest soil reading";
+    sensorTemperature.textContent = formatReading(temperature, " F");
+    sensorHumidity.textContent = formatReading(humidity, "%");
+    sensorLastReading.textContent = timestamp ? new Date(timestamp).toLocaleString() : "--";
+    sensorReadingNote.textContent = timestamp ? "Connection stable" : "No timestamp available";
+  } else {
+    dashboardSoilNote.textContent = "Connect the readings endpoint to populate";
+    sensorSoilNote.textContent = "Connect the readings endpoint to populate";
+  }
+
+  if (motionResult.status === "fulfilled") {
+    const motion = Array.isArray(motionResult.value)
+      ? motionResult.value
+      : motionResult.value?.items || motionResult.value?.documents || [];
+    dashboardMotionAlerts.textContent = motion.length;
+    dashboardMotionNote.textContent = "Latest motion records";
+  } else {
+    dashboardMotionNote.textContent = "No motion data available";
+  }
+
+  if (eventsResult.status === "fulfilled") {
+    const events = Array.isArray(eventsResult.value)
+      ? eventsResult.value
+      : eventsResult.value?.items || eventsResult.value?.documents || [];
+    if (events.length) {
+      activityTimeline.replaceChildren(
+        ...events.slice(0, 5).map((event) => {
+          const item = document.createElement("li");
+          item.className = "timeline-item";
+          item.textContent = event.description || event.message || event.type || "Garden event";
+          const detail = document.createElement("small");
+          detail.textContent = event.timestamp || event.created_at || "Recent";
+          item.append(detail);
+          return item;
+        }),
+      );
+    }
+  }
+};
 
 const closeDropdown = ({ trigger, panel }) => {
   trigger.setAttribute("aria-expanded", "false");
@@ -185,6 +276,7 @@ const loadWeather = async () => {
 };
 
 loadWeather();
+loadGardenData();
 
 menuTrigger.addEventListener("click", () => {
   toggleDropdown(dropdowns[0]);
@@ -207,6 +299,15 @@ productOptions.forEach((product) => {
   });
 });
 
+motionCard.addEventListener("click", () => {
+  menuLabel.textContent = "Motion Detector";
+  contentViews.forEach((view) => {
+    view.hidden = view.id !== "motion-data-view";
+  });
+  closeDropdown(dropdowns[0]);
+  updateMenuOptions("motion-data-view");
+});
+
 backToProductsButtons.forEach((button) => {
   button.addEventListener("click", () => {
     contentViews.forEach((view) => {
@@ -222,6 +323,14 @@ userImage.addEventListener("click", () => {
   });
   closeDropdown(dropdowns[0]);
   updateMenuOptions("user-settings-view");
+});
+
+backToDashboardButton.addEventListener("click", () => {
+  menuLabel.textContent = "Home";
+  contentViews.forEach((view) => {
+    view.hidden = view.id !== "main-view";
+  });
+  updateMenuOptions("main-view");
 });
 
 weatherTrigger.addEventListener("click", (event) => {
