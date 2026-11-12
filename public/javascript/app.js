@@ -56,6 +56,10 @@ const formatReading = (value, suffix = "") =>
     ? "--"
     : `${value}${suffix}`;
 
+const setText = (element, value) => {
+  if (element) element.textContent = value;
+};
+
 const loadGardenData = async () => {
   const [healthResult, latestResult, motionResult, eventsResult] =
     await Promise.allSettled([
@@ -66,11 +70,11 @@ const loadGardenData = async () => {
     ]);
 
   if (healthResult.status === "fulfilled") {
-    systemHealthStatus.textContent = "Excellent";
-    systemHealthNote.textContent = "All devices online";
+    setText(systemHealthStatus, "Excellent");
+    setText(systemHealthNote, "All devices online");
   } else {
-    systemHealthStatus.textContent = "Offline";
-    systemHealthNote.textContent = "Backend connection unavailable";
+    setText(systemHealthStatus, "Offline");
+    setText(systemHealthNote, "Backend connection unavailable");
   }
 
   if (latestResult.status === "fulfilled") {
@@ -83,29 +87,33 @@ const loadGardenData = async () => {
     const temperature = getReadingValue(soil, ["temperature", "temperature_f"]);
     const humidity = getReadingValue(soil, ["humidity", "relative_humidity"]);
     const timestamp = getReadingValue(soil, ["timestamp", "created_at", "updated_at"]);
-    dashboardSoilMoisture.textContent = formatReading(moisture, "%");
-    dashboardSoilNote.textContent =
-      moisture === null ? "No soil reading available" : "Latest soil reading";
-    sensorSoilMoisture.textContent = formatReading(moisture, "%");
-    sensorSoilNote.textContent =
-      moisture === null ? "No soil reading available" : "Latest soil reading";
-    sensorTemperature.textContent = formatReading(temperature, " F");
-    sensorHumidity.textContent = formatReading(humidity, "%");
-    sensorLastReading.textContent = timestamp ? new Date(timestamp).toLocaleString() : "--";
-    sensorReadingNote.textContent = timestamp ? "Connection stable" : "No timestamp available";
+    setText(dashboardSoilMoisture, formatReading(moisture, "%"));
+    setText(
+      dashboardSoilNote,
+      moisture === null ? "No soil reading available" : "Latest soil reading",
+    );
+    setText(sensorSoilMoisture, formatReading(moisture, "%"));
+    setText(
+      sensorSoilNote,
+      moisture === null ? "No soil reading available" : "Latest soil reading",
+    );
+    setText(sensorTemperature, formatReading(temperature, " F"));
+    setText(sensorHumidity, formatReading(humidity, "%"));
+    setText(sensorLastReading, timestamp ? new Date(timestamp).toLocaleString() : "--");
+    setText(sensorReadingNote, timestamp ? "Connection stable" : "No timestamp available");
   } else {
-    dashboardSoilNote.textContent = "Connect the readings endpoint to populate";
-    sensorSoilNote.textContent = "Connect the readings endpoint to populate";
+    setText(dashboardSoilNote, "Connect the readings endpoint to populate");
+    setText(sensorSoilNote, "Connect the readings endpoint to populate");
   }
 
   if (motionResult.status === "fulfilled") {
     const motion = Array.isArray(motionResult.value)
       ? motionResult.value
       : motionResult.value?.items || motionResult.value?.documents || [];
-    dashboardMotionAlerts.textContent = motion.length;
-    dashboardMotionNote.textContent = "Latest motion records";
+    setText(dashboardMotionAlerts, motion.length);
+    setText(dashboardMotionNote, "Latest motion records");
   } else {
-    dashboardMotionNote.textContent = "No motion data available";
+    setText(dashboardMotionNote, "No motion data available");
   }
 
   if (eventsResult.status === "fulfilled") {
@@ -307,7 +315,7 @@ productOptions.forEach((product) => {
   });
 });
 
-motionCard.addEventListener("click", () => {
+motionCard?.addEventListener("click", () => {
   menuLabel.textContent = "Motion Detector";
   contentViews.forEach((view) => {
     view.hidden = view.id !== "motion-data-view";
