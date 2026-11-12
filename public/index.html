@@ -247,13 +247,26 @@
           </ul>
         </section>
 
-        <section class="feed-row" aria-label="Live feed placeholder">
+        <section class="feed-row" aria-label="Live camera feed">
           <a
             class="live-feed"
             href="live-feed.html"
             aria-label="Open live camera feed"
-            >Live feed</a
           >
+            <img
+              class="live-feed-stream"
+              src="http://153.106.82.220:8000/stream.mjpg"
+              alt="Live backyard camera feed"
+            />
+            <span class="live-feed-topline">
+              <span>Backyard camera</span>
+              <span class="live-feed-live">● Live</span>
+            </span>
+            <span class="live-feed-bottomline">
+              <time data-local-time>--:--</time>
+              <span>Motion clear</span>
+            </span>
+          </a>
           <div class="feed-actions">
             <a class="feed-action" href="recommended-actions.html">Actions</a>
             <a class="feed-action" href="live-feed.html">Photos </a>
@@ -505,6 +518,7 @@
       </section>
     </main>
     <script src="api.js"></script>
-    <script src="javascript/app.js?v=20261112"></script>
+    <script src="javascript/app.js"></script>
+    <script src="javascript/live-feed.js"></script>
   </body>
 </html>

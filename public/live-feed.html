@@ -14,20 +14,23 @@
       </div>
       <div
         class="camera-frame"
-        role="img"
-        aria-label="Live camera feed placeholder"
+        aria-label="Live backyard camera feed"
       >
+        <img
+          class="camera-stream"
+          src="http://153.106.82.220:8000/stream.mjpg"
+          alt="Live backyard camera feed"
+        />
         <span class="camera-topline">
           <span>Backyard camera</span>
           <span class="camera-live">● Live</span>
         </span>
-        <span class="camera-center">Camera feed placeholder</span>
         <span class="camera-bottomline">
-          <span>12:42 PM</span>
+          <time data-local-time>--:--</time>
           <span>Motion clear</span>
         </span>
       </div>
-      <p class="status">Camera connection ready for a live stream.</p>
+      <p class="status">Live camera stream</p>
       <section class="photos" aria-label="Photo placeholders">
         <h2 class="photos-heading">Photos</h2>
         <div class="photo-grid">
@@ -55,5 +58,6 @@
         </div>
       </section>
     </main>
+    <script src="javascript/live-feed.js"></script>
   </body>
 </html>
